@@ -22,19 +22,20 @@
   --background-color: #ffffff; /* Background color for the entire website, including individual sections */
   --default-color: #444444; /* Default color used for the majority of the text content across the entire website */
   --heading-color: #191919; /* Color for headings, subheadings and title throughout the website */
-  --accent-color: #cc1616; /* Accent color that represents your brand on the website. It's used for buttons, links, and other elements that need to stand out */
+  --accent-color: #cc2e28; /* Accent color that represents your brand on the website. It's used for buttons, links, and other elements that need to stand out */
   --surface-color: #ffffff; /* The surface color is used as a background of boxed elements within sections, such as cards, icon boxes, or other elements that require a visual separation from the global background. */
   --contrast-color: #ffffff; /* Contrast color for text, ensuring readability against backgrounds of accent, heading, or default colors. */
+  --secondary-color: #edf000;
 }
 
 /* Nav Menu Colors - The following color variables are used specifically for the navigation menu. They are separate from the global colors to allow for more customization options */
 :root {
-  --nav-color: #cc1616;  /* The default color of the main navmenu links */
-  --nav-hover-color: #cc1616; /* Applied to main navmenu links when they are hovered over or active */
+  --nav-color: #cc2e28;  /* The default color of the main navmenu links */
+  --nav-hover-color: #cc2e28; /* Applied to main navmenu links when they are hovered over or active */
   --nav-mobile-background-color: #ffffff; /* Used as the background color for mobile navigation menu */
   --nav-dropdown-background-color: #ffffff; /* Used as the background color for dropdown items that appear when hovering over primary navigation items */
   --nav-dropdown-color: #212529; /* Used for navigation links of the dropdown items in the navigation menu. */
-  --nav-dropdown-hover-color: #cc1616; /* Similar to --nav-hover-color, this color is applied to dropdown navigation links when they are hovered over. */
+  --nav-dropdown-hover-color: #cc2e28; /* Similar to --nav-hover-color, this color is applied to dropdown navigation links when they are hovered over. */
 }
 
 /* Color Presets - These classes override global colors when applied to any section or element, providing reuse of the sam color scheme. */
@@ -145,7 +146,7 @@ h6 {
 .header {
   --background-color: #ffffff;
   --default-color: #ffffff;
-  --heading-color: #cc1616;
+  --heading-color: #cc2e28;
   --contrast-color: #ffffff;
   color: var(--default-color);
   transition: all 0.5s;
@@ -533,10 +534,19 @@ h6 {
 --------------------------------------------------------------*/
 .footer {
   color: var(--default-color);
-  background-color: var(--background-color);
+  background-color: var(--accent-color);
   font-size: 14px;
   padding-bottom: 50px;
   position: relative;
+}
+
+.footer .secondary{
+  color: var(--secondary-color);
+}
+
+.footer .yellow-line{
+  background-color: var(--secondary-color);
+  height: 1.5vh;
 }
 
 .footer .footer-top {
@@ -570,23 +580,29 @@ h6 {
   font-family: var(--heading-font);
 }
 
+.footer .contact-container i{
+font-size: 3vh;
+margin-right: 10px;
+}
+
 .footer .social-links a {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
+  width: 4vh;
+  height: 4vh;
   border-radius: 50%;
-  border: 1px solid color-mix(in srgb, var(--default-color), transparent 50%);
-  font-size: 16px;
-  color: color-mix(in srgb, var(--default-color), transparent 30%);
+  border: 1px solid var(--default-color);
+  font-size: 1.5vh;
+  color: var(--default-color);
   margin-right: 10px;
   transition: 0.3s;
 }
 
 .footer .social-links a:hover {
   color: var(--accent-color);
-  border-color: var(--accent-color);
+  border-color: var(--default-color);
+  background-color: var(--default-color);
 }
 
 .footer h4 {
@@ -623,13 +639,13 @@ h6 {
 }
 
 .footer .footer-links ul a {
-  color: color-mix(in srgb, var(--default-color), transparent 30%);
+  color: var(--default-color);
   display: inline-block;
   line-height: 1;
 }
 
 .footer .footer-links ul a:hover {
-  color: var(--accent-color);
+  color: var(--secondary-color);
 }
 
 .footer .footer-contact p {
@@ -833,7 +849,7 @@ section,
   text-align: center;
   padding: 30px 0;
   margin-bottom: 30px;
-  position: relative;
+  position: relative;;
 }
 
 .section-title h2 {
@@ -844,6 +860,7 @@ section,
   padding-bottom: 0;
   position: relative;
   z-index: 2;
+  color: var(--accent-color);
 }
 
 .section-title span {
@@ -1699,11 +1716,4 @@ section,
 .portfolio-details .portfolio-description p {
   padding: 0;
   color: color-mix(in srgb, var(--default-color), transparent 30%);
-}
-
-/*--------------------------------------------------------------
-# Starter Section Section
---------------------------------------------------------------*/
-.starter-section {
-  /* Add your styles here */
 }
