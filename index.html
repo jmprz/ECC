@@ -32,43 +32,59 @@
 
 <body class="index-page">
 
-  <header id="header" class="header fixed-top">
-
+  <header id="header" class="header fixed-top shadow">
 
 
     <div class="branding d-flex align-items-center">
-
-      <div class="container position-relative d-flex align-items-center justify-content-between">
-        <a href="index.html" class="logo d-flex align-items-center">
-          <!-- Uncomment the line below if you also wish to use an image logo -->
-       <img src="assets/img/earist.png" alt="">
-          <h1 class="fs-4">EARIST - CAVITE CAMPUS</h1>
-        </a>
-
-        <nav id="navmenu" class="navmenu">
-          <ul>
-            <li class="dropdown"><a href="#"><span>ABOUT</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
-              <ul>
-                <li><a href="#about">ECC HISTORY</a></li>
-                <li><a href="#">OFFICIALS AND CHIEF OF OFFICES</a></li>
-                <li><a href="#">EMPLOYEES</a></li>
-              </ul>
-            </li>
-            <li><a href="#">ACCOMPLISHMENTS</a></li>
-            <li><a href="#">DESIGNATION</a></li>
-            <li class="dropdown"><a href="#"><span>PROGRAM OFFERED</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
-              <ul>
-                <li><a href="#about">GRADUATE PROGRAMS</a></li>
-                <li><a href="#">UNDERGRADUATE PROGRAMS</a></li>
-              </ul>
-            </li>
-          </ul>
-          <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
-        </nav>
+      <div class="container d-flex align-items-center justify-content-between">
+          <!-- Logo on the left -->
+          <a href="index.html" class="d-flex align-items-center">
+              <img src="assets/img/earist.png" class="logo" alt="">
+              <h1 class="fs-4 fw-bold mt-3 ms-2">EARIST - CAVITE CAMPUS</h1> 
+          </a>
+  
+          <!-- Grid for Transparency Seal and FOI -->
+          <div class="d-flex justify-content-end align-items-center">
+              <div class="d-flex flex-column align-items-center me-4 d-none d-md-flex">
+                  <a href="index.html" class="d-flex align-items-center">
+                      <img src="assets/img/transparency_seal.png" class="logo2" alt="">
+                      <h1 class="fs-6 fw-bold mt-3 ms-2">TRANSPARENCY SEAL</h1>
+                  </a>
+              </div>
+              <div class="d-flex flex-column align-items-center d-none d-md-flex">
+                  <a href="index.html" class="d-flex align-items-center">
+                      <img src="assets/img/FOI.png" class="logo2" alt="">
+                      <h1 class="fs-6 fw-bold mt-3 ms-2">FREEDOM OF INFORMATION</h1>
+                  </a>
+              </div>
+          </div>
       </div>
+  </div>
+  
 
-    </div>
-
+    <nav id="navmenu" class="navmenu">
+      <ul>
+        <li class="dropdown"><a href="#"><span>ABOUT</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
+          <ul>
+            <li><a href="/ecc_history.html">ECC HISTORY</a></li>
+          </ul>
+        </li>
+        <li><a href="#">ACCOMPLISHMENTS</a></li>
+        <li class="dropdown"><a href="#"><span>DESIGNATION</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
+          <ul>
+        <li><a href="#">OFFICIALS AND CHIEF OF OFFICES</a></li>
+        <li><a href="#">EMPLOYEES</a></li>
+      </ul>
+      </li>
+        <li class="dropdown"><a href="#"><span>PROGRAM OFFERED</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
+          <ul>
+            <li><a href="#about">GRADUATE PROGRAMS</a></li>
+            <li><a href="#">UNDERGRADUATE PROGRAMS</a></li>
+          </ul>
+        </li>
+      </ul>
+      <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
+    </nav>
   </header>
 
   <main class="main">
@@ -116,7 +132,7 @@
         <div class="col-lg-2 col-md-3 footer-links">
           <h4 class="secondary">About EARIST</h4>
           <ul>
-            <li><a href="#">ECC HISTORY</a></li>
+            <li><a href="/ecc_history.html">ECC HISTORY</a></li>
             <li><a href="#">OFFICIALS AND CHIEF OF OFFICES</a></li>
           </ul>
         </div>
