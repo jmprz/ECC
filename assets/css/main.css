@@ -181,6 +181,11 @@ h6 {
   width: 60px;
  }
 
+ 
+ .hc{
+  color:#114170;
+ }
+
 @media (max-width: 575px) {
 
   .header .topbar .contact-info i a,
@@ -623,6 +628,10 @@ margin-right: 10px;
   font-weight: bold;
   position: relative;
   padding-bottom: 12px;
+}
+
+.footer .logo2{
+  width:40px;
 }
 
 .footer .footer-links {
