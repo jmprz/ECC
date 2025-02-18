@@ -1257,8 +1257,27 @@ section,
   position: relative;
   padding: 160px 0 100px 0;
 }
-.ecc-history .section {
+
+/*--------------------------------------------------------------
+# ECC Officials Section
+--------------------------------------------------------------*/
+.ecc-officials {
+  width: 100%;
+  min-height: 75vh;
+  position: relative;
+  padding: 160px 0 100px 0;
 }
+.ecc-officials .container{
+  background-color: var(--accent-color);
+  width: 100%;
+  min-height: 75vh;
+}
+.officials h1{
+  color: var(--accent-color);
+}
+
+
+
 
 /*--------------------------------------------------------------
 # Contact Section
