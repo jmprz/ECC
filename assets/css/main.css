@@ -1267,15 +1267,21 @@ section,
   position: relative;
   padding: 160px 0 100px 0;
 }
-.ecc-officials .container{
-  background-color: var(--accent-color);
-  width: 100%;
-  min-height: 75vh;
-}
+
 .officials h1{
   color: var(--accent-color);
 }
 
+.card-officials{
+  background-color: var(--accent-color);
+  width: 80rem;
+  height: auto;
+  padding: 15px 15px;
+}
+
+.card-officials h4{
+ color: var(--secondary-color);
+}
 
 
 
