@@ -921,66 +921,13 @@ section,
 --------------------------------------------------------------*/
 .hero {
   width: 100%;
-  min-height: 75vh;
   position: relative;
-  padding: 160px 0 100px 0;
+  background: linear-gradient(0deg, var(--background-color) 0%, color-mix(in srgb, var(--background-color) 90%, white 10%) 100%);
+  padding: 0;
   display: flex;
+  flex-direction: column;
+  justify-content: end;
   align-items: center;
-  justify-content: center;
-}
-
-.hero img {
-  position: absolute;
-  inset: 0;
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  z-index: 1;
-}
-
-.hero:before {
-  content: "";
-  background: color-mix(in srgb, var(--background-color), transparent 30%);
-  position: absolute;
-  inset: 0;
-  z-index: 2;
-}
-
-.hero .container {
-  position: relative;
-  z-index: 3;
-}
-
-.hero h2 {
-  margin: 0;
-  font-size: 48px;
-  text-transform: uppercase;
-  font-weight: 700;
-}
-
-.hero p {
-  margin: 10px 0 0 0;
-  font-size: 24px;
-  color: var(--heading-color);
-}
-
-.hero .btn-get-started {
-  color: var(--default-color);
-  font-weight: 400;
-  font-size: 15px;
-  display: inline-block;
-  padding: 8px 30px;
-  margin: 30px 0 0 0;
-  transition: 0.5s;
-  text-transform: uppercase;
-  border: 2px solid color-mix(in srgb, var(--default-color), transparent 20%);
-}
-
-.hero .btn-get-started:hover {
-  color: var(--contrast-color);
-  background: var(--accent-color);
-  border-color: var(--accent-color);
 }
 
 .hero .carousel-container {
@@ -994,9 +941,27 @@ section,
   color: white;
 }
 
+.hero h2 {
+  margin-bottom: 30px;
+  font-size: 48px;
+  font-weight: 700;
+  color: white;
+}
+
+.hero h2 span {
+  text-decoration: underline;
+}
+
+.hero p {
+  max-width: 80%;
+  animation-delay: 0.4s;
+  margin: 0 auto 30px auto;
+}
+
 .hero .carousel-control-prev,
 .hero .carousel-control-next {
   width: 10%;
+  margin-top: 100px;
 }
 
 .hero .carousel-control-next-icon,
@@ -1014,6 +979,7 @@ section,
   position: absolute;
   bottom: 0;
   width: 100000px;
+  height: 30%; /* Adjust height of the gradient overlay */
   z-index: 0;
 }
 
@@ -1025,7 +991,7 @@ section,
   height: 100%; /* Ensure full container height */
   object-fit: cover; /* Prevents distortion and fills the container */
   z-index: -1;
-  filter: brightness(0.6);
+  filter: brightness(0.4);
   background-image:
     linear-gradient(to bottom, rgba(245, 246, 252, 0.52), rgba(117, 19, 93, 0.73));
 }
@@ -1040,6 +1006,33 @@ section,
   width: 80%;
   max-width: 1200px; /* Ensures content doesn’t get too wide on larger screens */
 }
+
+.first-img{
+  top: 30%; /* Moves details to the top */
+  left: 50%;
+}
+
+.carousel-details h2 {
+  font-size: 4rem;
+  font-weight: 700;
+  margin-top: 7rem;
+  color: white;
+  text-shadow: 3px 4px 7px rgba(0,0,0,1);
+}
+
+.carousel-details p {
+  font-size: 18px;
+  max-width: 700px;
+  margin: 0 auto 20px auto;
+  color: white;
+}
+
+.carousel-details .btn-get-started {
+  display: inline-block;
+  padding: 12px 24px; /* Added padding for better button sizing */
+  font-size: 16px; /* Slightly larger font for better readability */
+}
+
 
 
 @media (max-width: 768px) {
