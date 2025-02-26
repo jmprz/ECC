@@ -1343,6 +1343,7 @@ section,
  .card-officials p, span{
   font-size: 0.9rem;
  }
+
 /*--------------------------------------------------------------
 # ECC Faculty Section
 --------------------------------------------------------------*/
@@ -1369,6 +1370,24 @@ section,
 
 .faculty-font {
   font-size: 0.8rem !important;
+}
+
+/*--------------------------------------------------------------
+# ECC Program Section
+--------------------------------------------------------------*/
+.ecc-program {
+  width: 100%;
+  min-height: 75vh;
+  position: relative;
+  padding: 160px 0 100px 0;
+}
+
+.program h1{
+  color: var(--accent-color);
+}
+
+.program img{
+  width: 3.5rem;
 }
 
 
