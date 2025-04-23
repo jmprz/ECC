@@ -1,3 +1,7 @@
+<?php
+// 
+?>
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -56,56 +60,7 @@
   </head>
 
   <body class="index-page">
-    <header id="header" class="header fixed-top shadow">
-
-
-      <div class="branding d-flex align-items-center">
-        <div class="container d-flex align-items-center justify-content-between mt-3">
-            <!-- Logo on the left -->
-            <a href="index.html" class="d-flex align-items-center mx-auto mx-lg-0">
-                <img src="assets/img/earist.png" class="logo" alt="">
-                <h1 class="fs-4 fw-bold mt-3 ms-2">EARIST - CAVITE CAMPUS</h1> 
-            </a>
-    
-            <!-- Grid for Transparency Seal and FOI -->
-            <div class="d-flex justify-content-end align-items-center">
-                <div class="d-flex flex-column align-items-center me-4 d-none d-md-none d-lg-flex">
-                    <a href="index.html" class="d-flex align-items-center">
-                        <img src="assets/img/transparency_seal.png" class="logo2" alt="">
-                        <h1 class="fs-6 mt-3 ms-2 hc">TRANSPARENCY SEAL</h1>
-                    </a>
-                </div>
-                <div class="d-flex flex-column align-items-center d-none d-md-none d-lg-flex">
-                    <a href="index.html" class="d-flex align-items-center">
-                        <img src="assets/img/FOI.png" class="logo2" alt="">
-                        <h1 class="fs-6 mt-3 ms-2 hc">FREEDOM OF INFORMATION</h1>
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-  
-      <nav id="navmenu" class="navmenu">
-        <ul>
-          <li class="dropdown"><a href="#"><span>ABOUT</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
-            <ul>
-              <li><a href="/ecc_history.html">ECC HISTORY</a></li>
-              <li><a href="ecc_officials.html">OFFICIALS AND CHIEF OF OFFICES</a></li>
-            </ul>
-          </li>
-          <li><a href="#">ACCOMPLISHMENTS</a></li>
-          <li class="dropdown"><a href="#"><span>EMPLOYEES</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
-            <ul>
-          <li><a href="ecc_faculty.html">REGULAR FACULTY</a></li>
-          <li><a href="ecc_non-teaching.html">NON - TEACHING</a></li>
-        </ul>
-        </li>
-        <li><a href="ecc_program.html">PROGRAM OFFERINGS</a></li>
-        </ul>
-        <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
-      </nav>
-    </header>
+  <?php include('header.php'); ?>
     
     <main class="main">
       <section id="ecc-faculty" class="ecc-faculty section">
@@ -117,235 +72,235 @@
                 <div class="row gy-4 justify-content-center">
                   <div class="col-6 col-md-4 col-lg-2">
                     <div class="gallery">
-                    <img src="/assets/img/faculty/ABANTO, ROMMUEL E..JPG" class="img-fluid rounded-2 shadow-lg" alt="img1">
+                    <img src="assets/img/faculty/ABANTO, ROMMUEL E..JPG" class="img-fluid rounded-2 shadow-lg" alt="img1">
                   </div>
                   <p class="faculty-font fw-bold d-flex justify-content-center">ABANTO, ROMMUEL E.</p>
                 </div>
                   <div class="col-6 col-md-4 col-lg-2">
                     <div class="gallery">
-                    <img src="/assets/img/faculty/ABASOLO, ENRICO F.jpg" class="img-fluid rounded-2 shadow-lg" alt="img1">
+                    <img src="assets/img/faculty/ABASOLO, ENRICO F.jpg" class="img-fluid rounded-2 shadow-lg" alt="img1">
                   </div>
                   <p class="faculty-font fw-bold d-flex justify-content-center">ABASOLO, ENRICO F.</p>
                   </div>
                   <div class="col-6 col-md-4 col-lg-2">
                     <div class="gallery">
-                    <img src="/assets/img/faculty/BORJA, MICHAEL.JPG" class="img-fluid rounded-2 shadow-lg" alt="img1">
+                    <img src="assets/img/faculty/BORJA, MICHAEL.JPG" class="img-fluid rounded-2 shadow-lg" alt="img1">
                   </div>
                   <p class="faculty-font fw-bold d-flex justify-content-center">BORJA, MICHAEL</p>
                   </div>
                   <div class="col-6 col-md-4 col-lg-2">
                     <div class="gallery">
-                    <img src="/assets/img/faculty/BULIGAN, MICHAEL N..png" class="img-fluid rounded-2 shadow-lg" alt="img1">
+                    <img src="assets/img/faculty/BULIGAN, MICHAEL N..png" class="img-fluid rounded-2 shadow-lg" alt="img1">
                   </div>
                   <p class="faculty-font fw-bold d-flex justify-content-center">BULIGAN, MICHAEL N.</p>
                   </div>
                   <div class="col-6 col-md-4 col-lg-2">
                     <div class="gallery">
-                    <img src="/assets/img/faculty/CARANDANG, YVONNE O.jpg" class="img-fluid rounded-2 shadow-lg" alt="img1">
+                    <img src="assets/img/faculty/CARANDANG, YVONNE O.jpg" class="img-fluid rounded-2 shadow-lg" alt="img1">
                   </div>
                   <p class="faculty-font fw-bold d-flex justify-content-center">CARANDANG, YVONNE O.</p>
                   </div>
                   <div class="col-6 col-md-4 col-lg-2">
                     <div class="gallery">
-                    <img src="/assets/img/faculty/CONTRERAS, FLORDELITO B.JPG" class="img-fluid rounded-2 shadow-lg" alt="img1">
+                    <img src="assets/img/faculty/CONTRERAS, FLORDELITO B.JPG" class="img-fluid rounded-2 shadow-lg" alt="img1">
                   </div>
                   <p class="faculty-font fw-bold d-flex justify-content-center">CONTRERAS, FLORDELITO B.</p>
                   </div>
                   <div class="col-6 col-md-4 col-lg-2">
                     <div class="gallery">
-                    <img src="/assets/img/faculty/COO, AGNES N..jpg" class="img-fluid rounded-2 shadow-lg" alt="img1">
+                    <img src="assets/img/faculty/COO, AGNES N..jpg" class="img-fluid rounded-2 shadow-lg" alt="img1">
                   </div>
                   <p class="faculty-font fw-bold d-flex justify-content-center">COO, AGNES N.</p>
                   </div>
                   <div class="col-6 col-md-4 col-lg-2">
                     <div class="gallery">
-                    <img src="/assets/img/faculty/DE LEON, SHIRLEY P.jpg" class="img-fluid rounded-2 shadow-lg" alt="img1">
+                    <img src="assets/img/faculty/DE LEON, SHIRLEY P.jpg" class="img-fluid rounded-2 shadow-lg" alt="img1">
                   </div>
                   <p class="faculty-font fw-bold d-flex justify-content-center">DE LEON, SHIRLEY P.</p>
                   </div>
                   <div class="col-6 col-md-4 col-lg-2">
                     <div class="gallery">
-                    <img src="/assets/img/faculty/DELA CRUZ, MARILOU V.jpg" class="img-fluid rounded-2 shadow-lg" alt="img1">
+                    <img src="assets/img/faculty/DELA CRUZ, MARILOU V.jpg" class="img-fluid rounded-2 shadow-lg" alt="img1">
                   </div>
                   <p class="faculty-font fw-bold d-flex justify-content-center">DELA CRUZ, MARILOU V.</p>
                   </div>
                   <div class="col-6 col-md-4 col-lg-2">
                     <div class="gallery">
-                    <img src="/assets/img/faculty/DELOS REYES MA. LEE D.jpg" class="img-fluid rounded-2 shadow-lg" alt="img1">
+                    <img src="assets/img/faculty/DELOS REYES MA. LEE D.jpg" class="img-fluid rounded-2 shadow-lg" alt="img1">
                   </div>
                   <p class="faculty-font fw-bold d-flex justify-content-center">DELOS REYES, MA. LEE D.</p>
                   </div>
                   <div class="col-6 col-md-4 col-lg-2">
                     <div class="gallery">
-                    <img src="/assets/img/faculty/DOMINGO, GERLYN M.JPG" class="img-fluid rounded-2 shadow-lg" alt="img1">
+                    <img src="assets/img/faculty/DOMINGO, GERLYN M.JPG" class="img-fluid rounded-2 shadow-lg" alt="img1">
                   </div>
                   <p class="faculty-font fw-bold d-flex justify-content-center">DOMINGO, GERLYN M.</p>
                   </div>
                   <div class="col-6 col-md-4 col-lg-2">
                     <div class="gallery">
-                    <img src="/assets/img/faculty/DUBLADO, ANNA MAE D.jpg" class="img-fluid rounded-2 shadow-lg" alt="img1">
+                    <img src="assets/img/faculty/DUBLADO, ANNA MAE D.jpg" class="img-fluid rounded-2 shadow-lg" alt="img1">
                   </div>
                   <p class="faculty-font fw-bold d-flex justify-content-center">DUBLADO, ANNA MAE D.</p>
                   </div>
                   <div class="col-6 col-md-4 col-lg-2">
                     <div class="gallery">
-                    <img src="/assets/img/faculty/DUMPIT, Catherine D.jpg" class="img-fluid rounded-2 shadow-lg" alt="img1">
+                    <img src="assets/img/faculty/DUMPIT, Catherine D.jpg" class="img-fluid rounded-2 shadow-lg" alt="img1">
                   </div>
                   <p class="faculty-font fw-bold d-flex justify-content-center">DUMPIT, CATHERINE D.</p>
                   </div>
                   <div class="col-6 col-md-4 col-lg-2">
                     <div class="gallery">
-                    <img src="/assets/img/faculty/EBALLE, MELVIN G.jpg" class="img-fluid rounded-2 shadow-lg" alt="img1">
+                    <img src="assets/img/faculty/EBALLE, MELVIN G.jpg" class="img-fluid rounded-2 shadow-lg" alt="img1">
                   </div>
                   <p class="faculty-font fw-bold d-flex justify-content-center">EBALLE, MELVIN G.</p>
                   </div>
                   <div class="col-6 col-md-4 col-lg-2">
                     <div class="gallery">
-                    <img src="/assets/img/faculty/FERRER, FLORENCE B.jpg" class="img-fluid rounded-2 shadow-lg" alt="img1">
+                    <img src="assets/img/faculty/FERRER, FLORENCE B.jpg" class="img-fluid rounded-2 shadow-lg" alt="img1">
                   </div>
                   <p class="faculty-font fw-bold d-flex justify-content-center">FERRER, FLORENCE B.</p>
                   </div>
                   <div class="col-6 col-md-4 col-lg-2">
                     <div class="gallery">
-                    <img src="/assets/img/faculty/GONDRA, LYN R.jpg" class="img-fluid rounded-2 shadow-lg" alt="img1">
+                    <img src="assets/img/faculty/GONDRA, LYN R.jpg" class="img-fluid rounded-2 shadow-lg" alt="img1">
                   </div>
                   <p class="faculty-font fw-bold d-flex justify-content-center">GONDRA, LYN R.</p>
                   </div>
                   <div class="col-6 col-md-4 col-lg-2">
                     <div class="gallery">
-                    <img src="/assets/img/faculty/Guades, Eugene Paolo Z..jpg" class="img-fluid rounded-2 shadow-lg" alt="img1">
+                    <img src="assets/img/faculty/Guades, Eugene Paolo Z..jpg" class="img-fluid rounded-2 shadow-lg" alt="img1">
                   </div>
                   <p class="faculty-font fw-bold d-flex justify-content-center">GUADES, EUGENE PAOLO Z.</p>
                   </div>
                   <div class="col-6 col-md-4 col-lg-2">
                     <div class="gallery">
-                    <img src="/assets/img/faculty/INTIA, ANDREW D.jpg" class="img-fluid rounded-2 shadow-lg" alt="img1">
+                    <img src="assets/img/faculty/INTIA, ANDREW D.jpg" class="img-fluid rounded-2 shadow-lg" alt="img1">
                   </div>
                   <p class="faculty-font fw-bold d-flex justify-content-center">INTIA, ANDREW D.</p>
                   </div>
                   <div class="col-6 col-md-4 col-lg-2">
                     <div class="gallery">
-                    <img src="/assets/img/faculty/Liwanag, Nancy G.jpg" class="img-fluid rounded-2 shadow-lg" alt="img1">
+                    <img src="assets/img/faculty/Liwanag, Nancy G.jpg" class="img-fluid rounded-2 shadow-lg" alt="img1">
                   </div>
                   <p class="faculty-font fw-bold d-flex justify-content-center">LIWANAG, NANCY G.</p>
                   </div>
                   <div class="col-6 col-md-4 col-lg-2">
                     <div class="gallery">
-                    <img src="/assets/img/faculty/Luciano,Boniebert P.jpg" class="img-fluid rounded-2 shadow-lg" alt="img1">
+                    <img src="assets/img/faculty/Luciano,Boniebert P.jpg" class="img-fluid rounded-2 shadow-lg" alt="img1">
                   </div>
                   <p class="faculty-font fw-bold d-flex justify-content-center">LUCIANO, BONIEBERT P.</p>
                   </div>
                   <div class="col-6 col-md-4 col-lg-2">
                     <div class="gallery">
-                    <img src="/assets/img/faculty/MABANSAG, JOSELITO.jpg" class="img-fluid rounded-2 shadow-lg" alt="img1">
+                    <img src="assets/img/faculty/MABANSAG, JOSELITO.jpg" class="img-fluid rounded-2 shadow-lg" alt="img1">
                   </div>
                   <p class="faculty-font fw-bold d-flex justify-content-center">MABANSAG, JOSELITO</p>
                   </div>
                   <div class="col-6 col-md-4 col-lg-2">
                     <div class="gallery">
-                    <img src="/assets/img/faculty/Marfil, Rowee M..jpg" class="img-fluid rounded-2 shadow-lg" alt="img1">
+                    <img src="assets/img/faculty/Marfil, Rowee M..jpg" class="img-fluid rounded-2 shadow-lg" alt="img1">
                   </div>
                   <p class="faculty-font fw-bold d-flex justify-content-center">MARFIL, ROWEE M.</p>
                   </div>
                   <div class="col-6 col-md-4 col-lg-2">
                     <div class="gallery">
-                    <img src="/assets/img/faculty/MEDINA, JOHN DARREL J.jpg" class="img-fluid rounded-2 shadow-lg" alt="img1">
+                    <img src="assets/img/faculty/MEDINA, JOHN DARREL J.jpg" class="img-fluid rounded-2 shadow-lg" alt="img1">
                   </div>
                   <p class="faculty-font fw-bold d-flex justify-content-center">MEDINA, JOHN DARREL J.</p>
                   </div>
                   <div class="col-6 col-md-4 col-lg-2">
                     <div class="gallery">
-                    <img src="/assets/img/faculty/ORTEGA, BLESSED LEN.jpg" class="img-fluid rounded-2 shadow-lg" alt="img1">
+                    <img src="assets/img/faculty/ORTEGA, BLESSED LEN.jpg" class="img-fluid rounded-2 shadow-lg" alt="img1">
                   </div>
                   <p class="faculty-font fw-bold d-flex justify-content-center">ORTEGA, BLESSED LEN</p>
                   </div>
                   <div class="col-6 col-md-4 col-lg-2">
                     <div class="gallery">
-                    <img src="/assets/img/faculty/ORTEGA,NELIA A.jpg" class="img-fluid rounded-2 shadow-lg" alt="img1">
+                    <img src="assets/img/faculty/ORTEGA,NELIA A.jpg" class="img-fluid rounded-2 shadow-lg" alt="img1">
                   </div>
                   <p class="faculty-font fw-bold d-flex justify-content-center">ORTEGA, NELIA A.</p>
                   </div>
                   <div class="col-6 col-md-4 col-lg-2">
                     <div class="gallery">
-                    <img src="/assets/img/faculty/PAEL, ANTHONY JUDE C.jpg" class="img-fluid rounded-2 shadow-lg" alt="img1">
+                    <img src="assets/img/faculty/PAEL, ANTHONY JUDE C.jpg" class="img-fluid rounded-2 shadow-lg" alt="img1">
                   </div>
                   <p class="faculty-font fw-bold d-flex justify-content-center">PAEL, ANTHONY JUDE C.</p>
                   </div>
                   <div class="col-6 col-md-4 col-lg-2">
                     <div class="gallery">
-                    <img src="/assets/img/faculty/PEÑA, EDZEL G.jpg" class="img-fluid rounded-2 shadow-lg" alt="img1">
+                    <img src="assets/img/faculty/PEÑA, EDZEL G.jpg" class="img-fluid rounded-2 shadow-lg" alt="img1">
                   </div>
                   <p class="faculty-font fw-bold d-flex justify-content-center">PEÑA, EDZEL G.</p>
                   </div>
                   <div class="col-6 col-md-4 col-lg-2">
                     <div class="gallery">
-                    <img src="/assets/img/faculty/POBLETE, ROXANNE E.JPG" class="img-fluid rounded-2 shadow-lg" alt="img1">
+                    <img src="assets/img/faculty/POBLETE, ROXANNE E.JPG" class="img-fluid rounded-2 shadow-lg" alt="img1">
                   </div>
                   <p class="faculty-font fw-bold d-flex justify-content-center">POBLETE, ROXANNE E.</p>
                   </div>
                   <div class="col-6 col-md-4 col-lg-2">
                     <div class="gallery">
-                    <img src="/assets/img/faculty/RAMOS,CECIL L.jpg" class="img-fluid rounded-2 shadow-lg" alt="img1">
+                    <img src="assets/img/faculty/RAMOS,CECIL L.jpg" class="img-fluid rounded-2 shadow-lg" alt="img1">
                   </div>
                   <p class="faculty-font fw-bold d-flex justify-content-center">RAMOS,CECIL L.</p>
                   </div>
                   <div class="col-6 col-md-4 col-lg-2">
                     <div class="gallery">
-                    <img src="/assets/img/faculty/RAPADA, APPLE M.JPG" class="img-fluid rounded-2 shadow-lg" alt="img1">
+                    <img src="assets/img/faculty/RAPADA, APPLE M.JPG" class="img-fluid rounded-2 shadow-lg" alt="img1">
                   </div>
                   <p class="faculty-font fw-bold d-flex justify-content-center">RAPADA, APPLE M.</p>
                   </div> 
                   <div class="col-6 col-md-4 col-lg-2">
                     <div class="gallery">
-                    <img src="/assets/img/faculty/SORIANO, EDRU LEANDRE R..JPG" class="img-fluid rounded-2 shadow-lg" alt="img1">
+                    <img src="assets/img/faculty/SORIANO, EDRU LEANDRE R..JPG" class="img-fluid rounded-2 shadow-lg" alt="img1">
                   </div>
                   <p class="faculty-font fw-bold d-flex justify-content-center">SORIANO, EDRU LEANDRE R.</p>
                   </div>
                   <div class="col-6 col-md-4 col-lg-2">
                     <div class="gallery">
-                    <img src="/assets/img/faculty/SURIO, CECILIA B.jpg" class="img-fluid rounded-2 shadow-lg" alt="img1">
+                    <img src="assets/img/faculty/SURIO, CECILIA B.jpg" class="img-fluid rounded-2 shadow-lg" alt="img1">
                   </div>
                   <p class="faculty-font fw-bold d-flex justify-content-center">SURIO, CECILIA B.</p>
                   </div>
                   <div class="col-6 col-md-4 col-lg-2">
                     <div class="gallery">
-                    <img src="/assets/img/faculty/TILA-ON,LUZ J.jpg" class="img-fluid rounded-2 shadow-lg" alt="img1">
+                    <img src="assets/img/faculty/TILA-ON,LUZ J.jpg" class="img-fluid rounded-2 shadow-lg" alt="img1">
                   </div>
                   <p class="faculty-font fw-bold d-flex justify-content-center">TILA-ON,LUZ J.</p>
                   </div>
                   <div class="col-6 col-md-4 col-lg-2">
                     <div class="gallery">
-                    <img src="/assets/img/faculty/TIMAN, CLAUDETTE B.jpg" class="img-fluid rounded-2 shadow-lg" alt="img1">
+                    <img src="assets/img/faculty/TIMAN, CLAUDETTE B.jpg" class="img-fluid rounded-2 shadow-lg" alt="img1">
                   </div>
                   <p class="faculty-font fw-bold d-flex justify-content-center">TIMAN, CLAUDETTE B.</p>
                   </div>
                   <div class="col-6 col-md-4 col-lg-2">
                     <div class="gallery">
-                    <img src="/assets/img/faculty/TOLENTINO, JOEL H.jpg" class="img-fluid rounded-2 shadow-lg" alt="img1">
+                    <img src="assets/img/faculty/TOLENTINO, JOEL H.jpg" class="img-fluid rounded-2 shadow-lg" alt="img1">
                   </div>
                   <p class="faculty-font fw-bold d-flex justify-content-center">TOLENTINO, JOEL H.</p>
                   </div>
                   <div class="col-6 col-md-4 col-lg-2">
                     <div class="gallery">
-                    <img src="/assets/img/faculty/TONIDO, REYNANTE T.JPG" class="img-fluid rounded-2 shadow-lg" alt="img1">
+                    <img src="assets/img/faculty/TONIDO, REYNANTE T.JPG" class="img-fluid rounded-2 shadow-lg" alt="img1">
                   </div>
                   <p class="faculty-font fw-bold d-flex justify-content-center">TONIDO, REYNANTE T.</p>
                   </div>
                   <div class="col-6 col-md-4 col-lg-2">
                     <div class="gallery">
-                    <img src="/assets/img/faculty/TURALBA, ROBERTO A.jpg" class="img-fluid rounded-2 shadow-lg" alt="img1">
+                    <img src="assets/img/faculty/TURALBA, ROBERTO A.jpg" class="img-fluid rounded-2 shadow-lg" alt="img1">
                   </div>
                   <p class="faculty-font fw-bold d-flex justify-content-center">TURALBA, ROBERTO A.</p>
                   </div>
                   <div class="col-6 col-md-4 col-lg-2">
                   <div class="gallery">
-                  <img src="/assets/img/faculty/TUVILLA, JOSEPHINE S.jpg" class="img-fluid rounded-2 shadow-lg" alt="img1">
+                  <img src="assets/img/faculty/TUVILLA, JOSEPHINE S.jpg" class="img-fluid rounded-2 shadow-lg" alt="img1">
                 </div>
                 <p class="faculty-font fw-bold d-flex justify-content-center">TUVILLA, JOSEPHINE S.</p>
                 </div>
                 <div class="col-6 col-md-4 col-lg-2">
                 <div class="gallery">
-                <img src="/assets/img/faculty/VIADO, MARK JOSEPH A..png" class="img-fluid rounded-2 shadow-lg" alt="img1">
+                <img src="assets/img/faculty/VIADO, MARK JOSEPH A..png" class="img-fluid rounded-2 shadow-lg" alt="img1">
               </div>
               <p class="faculty-font fw-bold d-flex justify-content-center">VIADO, MARK JOSEPH A.</p>
               </div>
@@ -356,101 +311,11 @@
       <!-- /Contact Section -->
     </main>
 
-    <footer id="footer" class="footer position-relative dark-background">
-      <div class="yellow-line"></div>
-      <div class="container footer-top">
-        <div class="row gy-4">
-          <div class="col-lg-3 col-md-6 col-12 footer-links">
-            <h4 class="secondary fs-5">About EARIST</h4>
-            <ul>
-              <li><a href="/ecc_history.html">ECC HISTORY</a></li>
-              <li><a href="#">OFFICIALS AND CHIEF OF OFFICES</a></li>
-            </ul>
-            <h4 class="secondary mt-5 fs-5">Downloadable Forms</h4>
-            <ul>
-              <li><a href="#">Click here to Download</a></li>
-            </ul>
-          </div>
-
-          <div class="col-lg-3 col-md-6 col-12 footer-links">
-            <h4 class="secondary fs-5">Our Affiliates</h4>
-            <ul>
-              <li><a href="#">PASUC-NCR Research Consortium</a></li>
-              <li>
-                <a href="#"
-                  >International Research Conference on Innovation in
-                  Engineering, Science, and Technology</a
-                >
-              </li>
-              <li>
-                <a href="#"
-                  >Philippine Association of Institutions for Research</a
-                >
-              </li>
-              <li>
-                <a href="#"
-                  >International Research Conference on Higher Education</a
-                >
-              </li>
-            </ul>
-          </div>
-
-          <div class="col-lg-3 col-md-6 col-12 footer-links">
-            <h4 class="secondary fs-5">Contact Us</h4>
-            <div class="contact-container">
-              <p>
-                <i class="bi bi-geo-alt"></i> Congressional Rd, General Mariano
-                Alvarez, 4117 Cavite
-              </p>
-              <p><i class="bi bi-telephone"></i> (028)243-9467</p>
-              <p><i class="bi bi-envelope"></i> earistofficial1945@gmail.com</p>
-            </div>
-          </div>
-
-          <div class="col-lg-3 col-md-6 col-12 footer-links">
-            <div class="d-flex flex-column me-4 d-lg-flex">
-              <a href="index.html" class="d-flex align-items-center">
-                <img
-                  src="assets/img/transparency_seal.png"
-                  class="logo2"
-                  alt=""
-                />
-                <h1 class="fs-6 mt-2 ms-2">Transparency Seal</h1>
-              </a>
-            </div>
-            <div class="d-flex flex-column me-4 d-lg-flex mt-3">
-              <a href="index.html" class="d-flex align-items-center">
-                <img src="assets/img/FOI.png" class="logo2" alt="" />
-                <h1 class="fs-6 mt-2 ms-2">Freedom of Information</h1>
-              </a>
-            </div>
-            <h4 class="secondary fs-5 mt-4">Follow Us</h4>
-            <div class="social-links d-flex">
-              <a href="#"><i class="bi bi-twitter-x"></i></a>
-              <a href="#"><i class="bi bi-facebook"></i></a>
-              <a href="#"><i class="bi bi-instagram"></i></a>
-            </div>
-          </div>
-          <center>
-            <p>
-              © 2025 EULOGIO "AMANG" RODRIGUEZ INSTITUTE OF SCIENCE AND
-              TECHNOLOGY
-            </p>
-          </center>
-        </div>
-      </div>
-    </footer>
+    <?php include('footer.php'); ?>
 
     <!-- Scroll Top -->
-    <a
-      href="#"
-      id="scroll-top"
-      class="scroll-top d-flex align-items-center justify-content-center"
-      ><i class="bi bi-arrow-up-short"></i
-    ></a>
+    <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
 
-    <!-- Preloader -->
-    <div id="preloader"></div>
 
     <!-- Vendor JS Files -->
     <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>

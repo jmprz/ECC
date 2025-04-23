@@ -1,3 +1,6 @@
+<?php
+// 
+?>
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -56,56 +59,7 @@
   </head>
 
   <body class="index-page">
-    <header id="header" class="header fixed-top shadow">
-
-
-      <div class="branding d-flex align-items-center">
-        <div class="container d-flex align-items-center justify-content-between mt-3">
-            <!-- Logo on the left -->
-            <a href="index.html" class="d-flex align-items-center mx-auto mx-lg-0">
-                <img src="assets/img/earist.png" class="logo" alt="">
-                <h1 class="fs-4 fw-bold mt-3 ms-2">EARIST - CAVITE CAMPUS</h1> 
-            </a>
-    
-            <!-- Grid for Transparency Seal and FOI -->
-            <div class="d-flex justify-content-end align-items-center">
-                <div class="d-flex flex-column align-items-center me-4 d-none d-md-none d-lg-flex">
-                    <a href="index.html" class="d-flex align-items-center">
-                        <img src="assets/img/transparency_seal.png" class="logo2" alt="">
-                        <h1 class="fs-6 mt-3 ms-2 hc">TRANSPARENCY SEAL</h1>
-                    </a>
-                </div>
-                <div class="d-flex flex-column align-items-center d-none d-md-none d-lg-flex">
-                    <a href="index.html" class="d-flex align-items-center">
-                        <img src="assets/img/FOI.png" class="logo2" alt="">
-                        <h1 class="fs-6 mt-3 ms-2 hc">FREEDOM OF INFORMATION</h1>
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-  
-      <nav id="navmenu" class="navmenu">
-        <ul>
-          <li class="dropdown"><a href="#"><span>ABOUT</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
-            <ul>
-              <li><a href="/ecc_history.html">ECC HISTORY</a></li>
-              <li><a href="ecc_officials.html">OFFICIALS AND CHIEF OF OFFICES</a></li>
-            </ul>
-          </li>
-          <li><a href="#">ACCOMPLISHMENTS</a></li>
-          <li class="dropdown"><a href="#"><span>EMPLOYEES</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
-            <ul>
-          <li><a href="ecc_faculty.html">REGULAR FACULTY</a></li>
-          <li><a href="ecc_non-teaching.html">NON - TEACHING</a></li>
-        </ul>
-        </li>
-        <li><a href="ecc_program.html">PROGRAM OFFERINGS</a></li>
-        </ul>
-        <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
-      </nav>
-    </header>
+  <?php include('header.php'); ?>
 
     <main class="main">
       <section id="ecc-history" class="ecc-history section">
@@ -384,101 +338,11 @@
       <!-- /Contact Section -->
     </main>
 
-    <footer id="footer" class="footer position-relative dark-background">
-      <div class="yellow-line"></div>
-      <div class="container footer-top">
-        <div class="row gy-4">
-          <div class="col-lg-3 col-md-6 col-12 footer-links">
-            <h4 class="secondary fs-5">About EARIST</h4>
-            <ul>
-              <li><a href="/ecc_history.html">ECC HISTORY</a></li>
-              <li><a href="#">OFFICIALS AND CHIEF OF OFFICES</a></li>
-            </ul>
-            <h4 class="secondary mt-5 fs-5">Downloadable Forms</h4>
-            <ul>
-              <li><a href="#">Click here to Download</a></li>
-            </ul>
-          </div>
+    <?php include('footer.php'); ?>
 
-          <div class="col-lg-3 col-md-6 col-12 footer-links">
-            <h4 class="secondary fs-5">Our Affiliates</h4>
-            <ul>
-              <li><a href="#">PASUC-NCR Research Consortium</a></li>
-              <li>
-                <a href="#"
-                  >International Research Conference on Innovation in
-                  Engineering, Science, and Technology</a
-                >
-              </li>
-              <li>
-                <a href="#"
-                  >Philippine Association of Institutions for Research</a
-                >
-              </li>
-              <li>
-                <a href="#"
-                  >International Research Conference on Higher Education</a
-                >
-              </li>
-            </ul>
-          </div>
+<!-- Scroll Top -->
+    <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
 
-          <div class="col-lg-3 col-md-6 col-12 footer-links">
-            <h4 class="secondary fs-5">Contact Us</h4>
-            <div class="contact-container">
-              <p>
-                <i class="bi bi-geo-alt"></i> Congressional Rd, General Mariano
-                Alvarez, 4117 Cavite
-              </p>
-              <p><i class="bi bi-telephone"></i> (028)243-9467</p>
-              <p><i class="bi bi-envelope"></i> earistofficial1945@gmail.com</p>
-            </div>
-          </div>
-
-          <div class="col-lg-3 col-md-6 col-12 footer-links">
-            <div class="d-flex flex-column me-4 d-lg-flex">
-              <a href="index.html" class="d-flex align-items-center">
-                <img
-                  src="assets/img/transparency_seal.png"
-                  class="logo2"
-                  alt=""
-                />
-                <h1 class="fs-6 mt-2 ms-2">Transparency Seal</h1>
-              </a>
-            </div>
-            <div class="d-flex flex-column me-4 d-lg-flex mt-3">
-              <a href="index.html" class="d-flex align-items-center">
-                <img src="assets/img/FOI.png" class="logo2" alt="" />
-                <h1 class="fs-6 mt-2 ms-2">Freedom of Information</h1>
-              </a>
-            </div>
-            <h4 class="secondary fs-5 mt-4">Follow Us</h4>
-            <div class="social-links d-flex">
-              <a href="#"><i class="bi bi-twitter-x"></i></a>
-              <a href="#"><i class="bi bi-facebook"></i></a>
-              <a href="#"><i class="bi bi-instagram"></i></a>
-            </div>
-          </div>
-          <center>
-            <p>
-              © 2025 EULOGIO "AMANG" RODRIGUEZ INSTITUTE OF SCIENCE AND
-              TECHNOLOGY
-            </p>
-          </center>
-        </div>
-      </div>
-    </footer>
-
-    <!-- Scroll Top -->
-    <a
-      href="#"
-      id="scroll-top"
-      class="scroll-top d-flex align-items-center justify-content-center"
-      ><i class="bi bi-arrow-up-short"></i
-    ></a>
-
-    <!-- Preloader -->
-    <div id="preloader"></div>
 
     <!-- Vendor JS Files -->
     <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
