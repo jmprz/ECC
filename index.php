@@ -1,6 +1,3 @@
-<?php
-// 
-?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -30,51 +27,94 @@
   <link href="assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
 
   <!-- Main CSS File -->
-  <link href="assets/css/main.css" rel="stylesheet">
-</head>
+  <link href="assets/css/main.css?v=<?php echo time(); ?>" rel="stylesheet">
 
 <body class="index-page">
 
   <?php include('header.php'); ?>
 
-  <main class="main">
-    <section id="hero" class="hero section dark-background">
-      <div id="hero-carousel" data-bs-interval="5000" class="container carousel carousel-fade" data-bs-ride="carousel">
-        <div class="carousel-item active">
+<?php
+  require_once "./backend/config/db.php"; 
+
+  $result = $conn->query("SELECT * FROM carousel WHERE status='active' ORDER BY created_at DESC");
+?>
+
+ <main class="main">
+  <section id="hero" class="hero section dark-background">
+    <div id="hero-carousel" data-bs-interval="5000" class="container carousel carousel-fade" data-bs-ride="carousel">
+      <?php
+      $first = true;
+      while ($row = $result->fetch_assoc()): ?>
+        <div class="carousel-item <?= $first ? 'active' : '' ?>">
           <div class="carousel-container">
-            <img src="assets/img/facade/facade1.png" alt="" data-aos="fade-in">
-            <div class="carousel-details first-img">
-              <div class="container text-center" data-aos="fade-up" data-aos-delay="100">
-                <div class="row d-flex justify-content-center">
-                  <div class="col-12">
-                    <h2>Welcome to <br>EARIST - CAVITE CAMPUS</h2>
-                  </div>
-                </div>
-              </div>
+            <img src="<?= htmlspecialchars($row['image']) ?>" alt="<?= htmlspecialchars($row['title']) ?>" data-aos="fade-in">
+
+            <!-- Centered overlay -->
+            <!-- Centered overlay -->
+      <div class="carousel-details">
+        <div class="container text-center" data-aos="fade-up" data-aos-delay="100">
+          <div class="row d-flex justify-content-center">
+            <div class="col-12">
+              <h2><?= htmlspecialchars($row['title']) ?></h2>
+
+              <?php if (!empty($row['link'])): ?>
+                <!-- Open external link -->
+                <a href="<?= htmlspecialchars($row['link']) ?>" 
+                   target="_blank" 
+                   class="btn btn-details mt-3">
+                  View Details
+                </a>
+              <?php else: ?>
+                <!-- Open modal -->
+                <a href="#" 
+                   class="btn btn-details mt-3" 
+                   data-bs-toggle="modal" 
+                   data-bs-target="#imageModal" 
+                   data-bs-img="<?= htmlspecialchars($row['image']) ?>" 
+                   data-bs-title="<?= htmlspecialchars($row['title']) ?>">
+                  View Details
+                </a>
+              <?php endif; ?>
+
             </div>
           </div>
         </div>
-
-        <div class="carousel-item">
-          <div class="carousel-container">
-            <img src="assets/img/facade/facade1.png" alt="" data-aos="fade-in">
-            <div class="container text-center" data-aos="fade-up" data-aos-delay="100">
-              <div class="row d-flex justify-content-center">
-                <div class="col-12"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <a class="carousel-control-prev" href="#hero-carousel" role="button" data-bs-slide="prev">
-          <span class="carousel-control-prev-icon bi bi-chevron-left" aria-hidden="true"></span>
-        </a>
-        <a class="carousel-control-next" href="#hero-carousel" role="button" data-bs-slide="next">
-          <span class="carousel-control-next-icon bi bi-chevron-right" aria-hidden="true"></span>
-        </a>
       </div>
+          </div>
+        </div>
+      <?php $first = false; endwhile; ?>
+    </div>
+
+    <!-- Controls -->
+    <a class="carousel-control-prev" href="#hero-carousel" role="button" data-bs-slide="prev">
+      <span class="carousel-control-prev-icon bi bi-chevron-left" aria-hidden="true"></span>
+    </a>
+    <a class="carousel-control-next" href="#hero-carousel" role="button" data-bs-slide="next">
+      <span class="carousel-control-next-icon bi bi-chevron-right" aria-hidden="true"></span>
+    </a>
+
+    <!-- Modal -->
+    <div class="modal fade" id="imageModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-xl">
+       <div class="modal-content bg-transparent border-0 shadow-none position-relative">
+      
+         <!-- Close button outside image -->
+        <button type="button" class="btn-close position-absolute top-0 end-0 m-3 z-3 text-light" 
+              data-bs-dismiss="modal" aria-label="Close"></button>
+      
+         <!-- Zoomable container -->
+        <div class="modal-body d-flex justify-content-center align-items-center p-0">
+          <img id="modalImage" src="" alt="" class="img-fluid rounded zoomable">
+        </div>
+      </div>
+    </div>
+  </div>
+    </section>
+    <section class="news-section">
+        <?php include('news.php'); ?>
     </section>
   </main>
+
 
   <?php include('footer.php'); ?>
 
@@ -92,6 +132,26 @@
 
   <!-- Main JS File -->
   <script src="assets/js/main.js"></script>
+  <script>
+  const imageModal = document.getElementById('imageModal');
+  const modalImage = document.getElementById('modalImage');
+
+  // Load correct image
+  imageModal.addEventListener('show.bs.modal', function (event) {
+    const button = event.relatedTarget; 
+    const img = button.getAttribute('data-bs-img');
+    modalImage.src = img;
+    modalImage.classList.remove('zoomed'); // reset zoom
+  });
+
+  // Toggle zoom on click
+  modalImage.addEventListener('click', function () {
+    modalImage.classList.toggle('zoomed');
+  });
+</script>
+
+
+
 
 </body>
 </html>
