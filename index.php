@@ -40,46 +40,42 @@
 ?>
 
  <main class="main">
-  <section id="hero" class="hero section dark-background">
+<section id="hero" class="hero section dark-background">
     <div id="hero-carousel" data-bs-interval="5000" class="container carousel carousel-fade" data-bs-ride="carousel">
       <?php
       $first = true;
       while ($row = $result->fetch_assoc()): ?>
         <div class="carousel-item <?= $first ? 'active' : '' ?>">
           <div class="carousel-container">
-            <img src="<?= htmlspecialchars($row['image']) ?>" alt="<?= htmlspecialchars($row['title']) ?>" data-aos="fade-in">
+            <div class="row align-items-center h-100">
+              <div class="col-md-6">
+                <img src="<?= htmlspecialchars($row['image']) ?>" alt="<?= htmlspecialchars($row['title']) ?>" class="img-fluid w-100" data-aos="fade-in">
+              </div>
+              <div class="col-md-6">
+                <div class="carousel-details text-center text-white" data-aos="fade-up" data-aos-delay="100">
+                  <h2><?= htmlspecialchars($row['title']) ?></h2>
 
-            <!-- Centered overlay -->
-            <!-- Centered overlay -->
-      <div class="carousel-details">
-        <div class="container text-center" data-aos="fade-up" data-aos-delay="100">
-          <div class="row d-flex justify-content-center">
-            <div class="col-12">
-              <h2><?= htmlspecialchars($row['title']) ?></h2>
-
-              <?php if (!empty($row['link'])): ?>
-                <!-- Open external link -->
-                <a href="<?= htmlspecialchars($row['link']) ?>" 
-                   target="_blank" 
-                   class="btn btn-details mt-3">
-                  View Details
-                </a>
-              <?php else: ?>
-                <!-- Open modal -->
-                <a href="#" 
-                   class="btn btn-details mt-3" 
-                   data-bs-toggle="modal" 
-                   data-bs-target="#imageModal" 
-                   data-bs-img="<?= htmlspecialchars($row['image']) ?>" 
-                   data-bs-title="<?= htmlspecialchars($row['title']) ?>">
-                  View Details
-                </a>
-              <?php endif; ?>
-
+                  <?php if (!empty($row['link'])): ?>
+                    <!-- Open external link -->
+                    <a href="<?= htmlspecialchars($row['link']) ?>" 
+                       target="_blank" 
+                       class="btn btn-details mt-3">
+                      View Details
+                    </a>
+                  <?php else: ?>
+                    <!-- Open modal -->
+                    <a href="#" 
+                       class="btn btn-details mt-3" 
+                       data-bs-toggle="modal" 
+                       data-bs-target="#imageModal" 
+                       data-bs-img="<?= htmlspecialchars($row['image']) ?>" 
+                       data-bs-title="<?= htmlspecialchars($row['title']) ?>">
+                      View Details
+                    </a>
+                  <?php endif; ?>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
-      </div>
           </div>
         </div>
       <?php $first = false; endwhile; ?>
@@ -110,6 +106,7 @@
     </div>
   </div>
     </section>
+
     <section class="news-section">
         <?php include('news.php'); ?>
     </section>
