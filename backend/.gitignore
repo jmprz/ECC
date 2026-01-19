@@ -4,3 +4,9 @@
 
 # Composer dependencies
 /vendor/
+
+# User-uploaded files
+/uploads/
+
+# Temporary files
+/tmp/

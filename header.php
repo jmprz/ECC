@@ -36,11 +36,18 @@
       <li><a href="#">ACCOMPLISHMENTS</a></li>
       <li class="dropdown"><a href="#"><span>EMPLOYEES</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
         <ul>
-          <li><a href="ecc_faculty.php">REGULAR FACULTY</a></li>
+          <li><a href="ecc_faculty.php">FACULTY</a></li>
           <li><a href="ecc_non-teaching.php">NON - TEACHING</a></li>
         </ul>
       </li>
       <li><a href="ecc_program.php">PROGRAM OFFERINGS</a></li>
+    <li class="dropdown"><a href="#"><span>ACTIVITIES</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
+        <ul>
+          <li><a href="ecc_events.php">EVENTS</a></li>
+          <li><a href="ecc_news.php">NEWS</a></li>
+        </ul>
+    </li>
+    <li><a href="ecc_faq.php">FAQ</a></li>
     </ul>
     <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
   </nav>

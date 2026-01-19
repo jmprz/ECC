@@ -66,7 +66,7 @@
       <section id="ecc-faculty" class="ecc-faculty section">
         <!-- Section Title -->
         <div class="container officials position-relative dark-background" data-aos="fade-up">
-            <h1 class="fw-bold d-flex justify-content-center mb-2">ECC REGULAR FACULTY</h1>
+            <h1 class="fw-bold d-flex justify-content-center mb-2">ECC FACULTY</h1>
             <!-- First Card -->
             <div class="container d-flex justify-content-center">
                 <div class="row gy-4 justify-content-center">

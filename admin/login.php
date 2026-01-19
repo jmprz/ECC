@@ -84,7 +84,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 <body>
   <div class="card shadow login-card">
     <div class="card-body">
-      <h3 class="card-title text-center text-primary mb-4">Admin Login</h3>
+      <h3 class="card-title text-center mb-4 fw-bold">Admin Login</h3>
 
       <?php if ($error): ?>
         <div class="alert alert-danger"><?= $error ?></div>
@@ -99,7 +99,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
           <label class="form-label">Password</label>
           <input type="password" name="password" class="form-control" placeholder="Enter password" required>
         </div>
-        <button type="submit" class="btn btn-primary w-100">Login</button>
+        <button type="submit" class="btn btn-news w-100">Login</button>
       </form>
     </div>
   </div>

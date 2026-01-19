@@ -7,79 +7,17 @@ if (!isset($_SESSION['admin_id']) || $_SESSION['role'] !== 'admin') {
 
 require_once __DIR__ . '/../backend/config/db.php';
 
+// =============== CONTENT CRUD =================
 
-// =============== CAROUSEL CRUD =================
-
-// ADD
-if (isset($_POST['action']) && $_POST['action'] === "add_carousel") {
+// ADD CONTENT
+if (isset($_POST['action']) && $_POST['action'] === "add_content") {
     $title = trim($_POST['title']);
     $link = !empty($_POST['link']) ? trim($_POST['link']) : null;
+    $contentType = $_POST['content_type'];
 
-    $targetDir = "../backend/uploads/carousel/";
-    if (!is_dir($targetDir)) mkdir($targetDir, 0777, true);
-
-    $fileName = time() . "_" . basename($_FILES["image"]["name"]);
-    $targetFilePath = $targetDir . $fileName;
-
-    if (move_uploaded_file($_FILES["image"]["tmp_name"], $targetFilePath)) {
-        $imagePath = "backend/uploads/carousel/" . $fileName;
-        $stmt = $conn->prepare("INSERT INTO carousel (title, image, link) VALUES (?, ?, ?)");
-        $stmt->bind_param("sss", $title, $imagePath, $link);
-        $stmt->execute();
-        $stmt->close();
-    }
-
-    header("Location: admin_dashboard.php?success=carousel_added");
-    exit;
-}
-
-// EDIT
-if (isset($_POST['action']) && $_POST['action'] === "edit_carousel") {
-    $id = intval($_POST['id']);
-    $title = trim($_POST['title']);
-    $link = !empty($_POST['link']) ? trim($_POST['link']) : null;
-
-    $imagePath = $_POST['old_image']; // keep old image by default
-    if (!empty($_FILES["image"]["name"])) {
-        $targetDir = "../backend/uploads/carousel/";
-        $fileName = time() . "_" . basename($_FILES["image"]["name"]);
-        $targetFilePath = $targetDir . $fileName;
-        if (move_uploaded_file($_FILES["image"]["tmp_name"], $targetFilePath)) {
-            $imagePath = "backend/uploads/carousel/" . $fileName;
-        }
-    }
-
-    $stmt = $conn->prepare("UPDATE carousel SET title=?, image=?, link=? WHERE id=?");
-    $stmt->bind_param("sssi", $title, $imagePath, $link, $id);
-    $stmt->execute();
-    $stmt->close();
-
-    header("Location: admin_dashboard.php?success=carousel_updated");
-    exit;
-}
-
-// DELETE
-if (isset($_GET['delete_carousel'])) {
-    $id = intval($_GET['delete_carousel']);
-    $stmt = $conn->prepare("DELETE FROM carousel WHERE id=?");
-    $stmt->bind_param("i", $id);
-    $stmt->execute();
-    $stmt->close();
-
-    header("Location: admin_dashboard.php?success=carousel_deleted");
-    exit;
-}
-
-
-
-// =============== NEWS CRUD =================
-
-// ADD
-if (isset($_POST['action']) && $_POST['action'] === "add_news") {
-    $title = trim($_POST['title']);
-    $link = !empty($_POST['link']) ? trim($_POST['link']) : null;
-
-    $targetDir = "../backend/uploads/news/";
+    $isCarousel = $contentType === 'carousel';
+    $tableName = $isCarousel ? 'carousel' : 'news';
+    $targetDir = "../backend/uploads/$tableName/";
     if (!is_dir($targetDir)) mkdir($targetDir, 0777, true);
 
     $imagePath = null;
@@ -87,453 +25,379 @@ if (isset($_POST['action']) && $_POST['action'] === "add_news") {
         $fileName = time() . "_" . basename($_FILES["image"]["name"]);
         $targetFilePath = $targetDir . $fileName;
         if (move_uploaded_file($_FILES["image"]["tmp_name"], $targetFilePath)) {
-            $imagePath = "backend/uploads/news/" . $fileName;
+            $imagePath = "backend/uploads/$tableName/" . $fileName;
         }
     }
 
-    $stmt = $conn->prepare("INSERT INTO news (title, image, link) VALUES (?, ?, ?)");
+    if ($isCarousel && !$imagePath) {
+        header("Location: admin_dashboard.php?error=carousel_image_required");
+        exit;
+    }
+
+    $stmt = $conn->prepare("INSERT INTO $tableName (title, image, link) VALUES (?, ?, ?)");
     $stmt->bind_param("sss", $title, $imagePath, $link);
     $stmt->execute();
     $stmt->close();
 
-    header("Location: admin_dashboard.php?success=news_added");
+    header("Location: admin_dashboard.php?success={$contentType}_added");
     exit;
 }
 
-// EDIT
-if (isset($_POST['action']) && $_POST['action'] === "edit_news") {
-    $id = intval($_POST['id']);
-    $title = trim($_POST['title']);
-    $link = !empty($_POST['link']) ? trim($_POST['link']) : null;
-
-    $imagePath = $_POST['old_image']; // keep old image
-    if (!empty($_FILES["image"]["name"])) {
-        $targetDir = "../backend/uploads/news/";
-        $fileName = time() . "_" . basename($_FILES["image"]["name"]);
-        $targetFilePath = $targetDir . $fileName;
-        if (move_uploaded_file($_FILES["image"]["tmp_name"], $targetFilePath)) {
-            $imagePath = "backend/uploads/news/" . $fileName;
-        }
-    }
-
-    $stmt = $conn->prepare("UPDATE news SET title=?, image=?, link=? WHERE id=?");
-    $stmt->bind_param("sssi", $title, $imagePath, $link, $id);
-    $stmt->execute();
-    $stmt->close();
-
-    header("Location: admin_dashboard.php?success=news_updated");
-    exit;
+// DELETE (CAROUSEL/NEWS/USER/FAQ) - Condensed logic
+if (isset($_GET['delete_carousel'])) {
+    $id = intval($_GET['delete_carousel']);
+    $conn->query("DELETE FROM carousel WHERE id=$id");
+    header("Location: admin_dashboard.php?success=deleted"); exit;
 }
-
-// DELETE
 if (isset($_GET['delete_news'])) {
     $id = intval($_GET['delete_news']);
-    $stmt = $conn->prepare("DELETE FROM news WHERE id=?");
-    $stmt->bind_param("i", $id);
-    $stmt->execute();
-    $stmt->close();
-
-    header("Location: admin_dashboard.php?success=news_deleted");
-    exit;
+    $conn->query("DELETE FROM news WHERE id=$id");
+    header("Location: admin_dashboard.php?success=deleted"); exit;
+}
+if (isset($_GET['delete_user'])) {
+    $id = intval($_GET['delete_user']);
+    $conn->query("DELETE FROM admins WHERE id=$id");
+    header("Location: admin_dashboard.php?success=deleted"); exit;
+}
+if (isset($_GET['delete_faq'])) {
+    $id = intval($_GET['delete_faq']);
+    $conn->query("DELETE FROM faq WHERE id=$id");
+    header("Location: admin_dashboard.php?success=deleted"); exit;
 }
 
 // ADD USER
 if (isset($_POST['action']) && $_POST['action'] === "add_user") {
     $username = trim($_POST['username']);
     $password = password_hash(trim($_POST['password']), PASSWORD_DEFAULT);
-      $role = $_POST['role'];
-
+    $role = $_POST['role'];
     $stmt = $conn->prepare("INSERT INTO admins (username, password, role) VALUES (?, ?, ?)");
     $stmt->bind_param("sss", $username, $password, $role);
     $stmt->execute();
-    $stmt->close();
-
-    header("Location: admin_dashboard.php?success=user_added");
-    exit;
+    header("Location: admin_dashboard.php?success=user_added"); exit;
 }
 
-// =============== USERS CRUD =================
-
-// EDIT USER
-if (isset($_POST['action']) && $_POST['action'] === "edit_user") {
-    $id = intval($_POST['id']);
-    $username = trim($_POST['username']);
-    $role = $_POST['role'];
-
-    if (!empty($_POST['password'])) {
-        $password = password_hash(trim($_POST['password']), PASSWORD_DEFAULT);
-        $stmt = $conn->prepare("UPDATE admins SET username=?, password=?, role=? WHERE id=?");
-        $stmt->bind_param("sssi", $username, $password, $role, $id);
-    } else {
-        $stmt = $conn->prepare("UPDATE admins SET username=?, role=? WHERE id=?");
-        $stmt->bind_param("ssi", $username, $role, $id);
-    }
+// ADD FAQ
+if (isset($_POST['action']) && $_POST['action'] === "add_faq") {
+    $question = trim($_POST['question']);
+    $answer = trim($_POST['answer']);
+    $stmt = $conn->prepare("INSERT INTO faq (question, answer) VALUES (?, ?)");
+    $stmt->bind_param("ss", $question, $answer);
     $stmt->execute();
-    $stmt->close();
-
-    header("Location: admin_dashboard.php?success=user_updated");
-    exit;
+    header("Location: admin_dashboard.php?success=faq_added"); exit;
 }
-
-// DELETE USER
-if (isset($_GET['delete_user'])) {
-    $id = intval($_GET['delete_user']);
-    $stmt = $conn->prepare("DELETE FROM admins WHERE id=?");
-    $stmt->bind_param("i", $id);
-    $stmt->execute();
-    $stmt->close();
-
-    header("Location: admin_dashboard.php?success=user_deleted");
-    exit;
-}
-
 
 // =============== FETCH DATA =================
-$carousels = $conn->query("SELECT * FROM carousel ORDER BY id DESC");
-$news = $conn->query("SELECT * FROM news ORDER BY id DESC");
+$content = [];
+$carouselResult = $conn->query("SELECT *, 'carousel' as type FROM carousel ORDER BY id DESC");
+while ($row = $carouselResult->fetch_assoc()) { $content[] = $row; }
+$newsResult = $conn->query("SELECT *, 'news' as type FROM news ORDER BY id DESC");
+while ($row = $newsResult->fetch_assoc()) { $content[] = $row; }
+
 $users = $conn->query("SELECT * FROM admins ORDER BY id DESC");
+$faqs = $conn->query("SELECT * FROM faq ORDER BY id DESC");
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Admin Dashboard</title>
-<!-- Favicons -->
-  <link rel="apple-touch-icon" sizes="180x180" href="../../assets/img/favicon/apple-touch-icon.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="../../assets/img/favicon/favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="../../assets/img/favicon/favicon-16x16.png">
-  <link rel="manifest" href="../../assets/img/favicon/site.webmanifest">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EARIST Admin Panel</title>
+    
+    <link href="../assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+    <link href="../assets/css/main.css?v=<?php echo time(); ?>" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 
-  <!-- Fonts -->
-  <link href="https://fonts.googleapis.com" rel="preconnect">
-  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Open+Sans&family=Poppins&family=Raleway&display=swap" rel="stylesheet">
+    <style>
+        :root { --primary-color: #cc2e28; --bg-light: #f8f9fa; }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg-light); color: #333; }
+        
+        .card { border-radius: 12px; border: none; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+        .nav-tabs { border-bottom: 2px solid #dee2e6; }
+        .nav-link { font-weight: 600; color: #6c757d; border: none !important; padding: 1rem 1.5rem; }
+        .nav-link.active { color: var(--primary-color) !important; border-bottom: 3px solid var(--primary-color) !important; background: none !important; }
+        
+        /* Table Styling */
+        .table { background: white; border-radius: 8px; overflow: hidden; }
+        .table thead { background-color: #f1f4f8; }
+        .table thead th { font-weight: 700; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.5px; color: #555; border: none; }
+        .table td { vertical-align: middle; border-bottom: 1px solid #f1f1f1; }
+        
+        /* Image Thumbnail */
+        .img-thumb-container { width: 80px; height: 50px; overflow: hidden; border-radius: 6px; border: 1px solid #eee; }
+        .img-thumb-container img { width: 100%; height: 100%; object-fit: cover; }
+        
+        .badge { font-weight: 600; padding: 0.4em 0.8em; border-radius: 6px; }
+        .btn-action { border-radius: 8px; padding: 0.4rem 0.6rem; }
+        
+        .form-control, .form-select { border-radius: 8px; padding: 0.6rem 1rem; border: 1px solid #ced4da; }
+        .form-control:focus { box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.15); }
+      
+        /* Target the navigation links specifically */
+    .nav-tabs .nav-link {
+        color: #6c757d !important; /* Default state */
+    }
 
-  <!-- Vendor CSS Files -->
-  <link href="../assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-  <link href="../assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
-  <link href="../assets/vendor/aos/aos.css" rel="stylesheet">
-  <link href="../assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
-  <link href="../assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
+    .nav-tabs .nav-link.active {
+        color: var(--primary-color) !important;
+        border-bottom: 3px solid var(--primary-color) !important;
+    }
 
-  <!-- Main CSS File -->
-  <link href="../assets/css/main.css?v=<?php echo time(); ?>" rel="stylesheet">
+    .nav-tabs .nav-link:hover {
+        color: var(--primary-color) !important;
+    }
+
+
+    /* 1. Change the color of the active page number */
+.page-item.active .page-link {
+    background-color: #cc2e28 !important; /* Your brand color */
+    border-color: #cc2e28 !important;
+    color: white !important;
+}
+
+/* 2. Change the color of the text for inactive buttons */
+.page-link {
+    color: #cc2e28 !important; /* Your brand color */
+    border-radius: 6px;
+    margin: 0 2px;
+}
+
+/* 3. Change the hover effect */
+.page-link:hover {
+    background-color: #f8f9fa !important;
+    color: rgb(100, 19, 19) !important; /* Darker shade for hover */
+    border-color: #dee2e6 !important;
+}
+
+/* 4. Fix the focus/outline shadow color */
+.page-link:focus {
+    box-shadow: 0 0 0 0.25rem rgba(128, 0, 0, 0.25) !important;
+}
+   </style>
 </head>
-<body class="bg-light">
+<body>
 
-<div class="container py-5">
-  <div class="card shadow-lg border-0">
-    <div class="card-body">
-     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2 class="text-primary fw-bold mb-0">Admin Dashboard</h2>
-        <a href="logout.php" class="btn btn-danger">Logout</a>
-     </div>
-      <?php if (isset($_GET['success'])): ?>
-  <?php
-    $alerts = [
-      "carousel_added"   => "✅ Carousel added successfully!",
-      "carousel_updated" => "✏️ Carousel updated successfully!",
-      "carousel_deleted" => "🗑️ Carousel deleted!",
-      "news_added"       => "✅ News article added successfully!",
-      "news_updated"     => "✏️ News article updated successfully!",
-      "news_deleted"     => "🗑️ News deleted!",
-      "user_added"       => "✅ New admin added successfully!",
-      "user_updated"     => "✏️ Admin updated successfully!",
-      "user_deleted"     => "🗑️ Admin deleted!",
-    ];
-    $message = $alerts[$_GET['success']] ?? null;
-  ?>
-  <?php if ($message): ?>
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
-      <?= $message ?>
-      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+<nav class="navbar navbar-expand-lg navbar-light bg-light mb-4 shadow-sm">
+    <div class="container">
+        <a class="fs-1 fw-bold" href="#">ECC Admin</span></a>
+        <a href="logout.php" class="btn btn-sm btn-news rounded-3"><i class="bi bi-box-arrow-right me-2"></i>Logout</a>
     </div>
-  <?php endif; ?>
-<?php endif; ?>
-      <!-- Tabs -->
-      <ul class="nav nav-tabs" id="dashboardTabs" role="tablist">
-        <li class="nav-item">
-          <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#carouselTab" type="button">🎠 Carousel</button>
-        </li>
-        <li class="nav-item">
-          <button class="nav-link" data-bs-toggle="tab" data-bs-target="#newsTab" type="button">📰 News</button>
-        </li>
-        <li class="nav-item">
-          <button class="nav-link" data-bs-toggle="tab" data-bs-target="#usersTab" type="button">👤 Users</button>
-        </li>
-      </ul>
+</nav>
 
-      <div class="tab-content mt-4">
-        <!-- ================= Carousel Tab ================= -->
-        <div class="tab-pane fade show active" id="carouselTab">
-          <h4 class="fw-semibold">Add Carousel Item</h4>
-          <form method="POST" enctype="multipart/form-data" class="row g-3 mb-4">
-            <input type="hidden" name="action" value="add_carousel">
-            <div class="col-md-6">
-              <label class="form-label">Title</label>
-              <input type="text" name="title" class="form-control" required>
+<div class="container pb-5">
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card bg-white p-2">
+                <ul class="nav nav-tabs" id="mainTabs" role="tablist">
+                    <li class="nav-item"><button class="nav-link active" data-bs-toggle="tab" data-bs-target="#contentTab">Content Hub</button></li>
+                    <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#usersTab">User Access</button></li>
+                    <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#faqTab">FAQs</button></li>
+                </ul>
             </div>
-            <div class="col-md-6">
-              <label class="form-label">Image</label>
-              <input type="file" name="image" class="form-control" required>
-            </div>
-            <div class="col-12">
-              <label class="form-label">Button Link (Optional)</label>
-              <input type="url" name="link" class="form-control" placeholder="https://example.com">
-            </div>
-            <div class="col-12">
-              <button type="submit" class="btn btn-primary">➕ Upload</button>
-            </div>
-          </form>
+        </div>
+    </div>
 
-          <h5 class="fw-semibold">Carousel List</h5>
-          <table class="table table-hover align-middle">
-            <thead class="table-dark">
-              <tr>
-                <th>ID</th><th>Title</th><th>Image</th><th>Link</th><th>Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              <?php while ($row = $carousels->fetch_assoc()): ?>
-              <tr>
-                <td><?= $row['id'] ?></td>
-                <td><?= htmlspecialchars($row['title']) ?></td>
-                <td><img src="../<?= $row['image'] ?>" class="img-thumbnail" width="100"></td>
-                <td><?= $row['link'] ?: '<span class="text-muted">None</span>' ?></td>
-                <td>
-                  <button class="btn btn-sm btn-warning" 
-                          data-bs-toggle="modal" 
-                          data-bs-target="#editCarouselModal<?= $row['id'] ?>">✏️ Edit</button>
-                  <a href="?delete_carousel=<?= $row['id'] ?>" 
-                     class="btn btn-sm btn-danger" 
-                     onclick="return confirm('Are you sure you want to delete this carousel?')">🗑️ Delete</a>
-                </td>
-              </tr>
-
-              <!-- Edit Carousel Modal -->
-              <div class="modal fade" id="editCarouselModal<?= $row['id'] ?>" tabindex="-1">
-                <div class="modal-dialog modal-lg modal-dialog-centered">
-                  <div class="modal-content">
-                    <form method="POST" enctype="multipart/form-data">
-                      <div class="modal-header">
-                        <h5 class="modal-title">Edit Carousel</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                      </div>
-                      <div class="modal-body row g-3">
-                        <input type="hidden" name="action" value="edit_carousel">
-                        <input type="hidden" name="id" value="<?= $row['id'] ?>">
-                        <input type="hidden" name="old_image" value="<?= $row['image'] ?>">
-
-                        <div class="col-md-6">
-                          <label class="form-label">Title</label>
-                          <input type="text" name="title" value="<?= htmlspecialchars($row['title']) ?>" class="form-control" required>
+    <div class="tab-content">
+        <div class="tab-pane fade show active" id="contentTab">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="fw-bold mb-4">Create New Content</h5>
+                    <form method="POST" enctype="multipart/form-data" class="row g-3">
+                        <input type="hidden" name="action" value="add_content">
+                        <div class="col-md-3">
+                            <label class="form-label fw-bold small">Category</label>
+                            <select name="content_type" id="contentType" class="form-select">
+                                <option value="carousel">Carousel Slider</option>
+                                <option value="news">Latest News</option>
+                            </select>
                         </div>
-                        <div class="col-md-6">
-                          <label class="form-label">Replace Image (optional)</label>
-                          <input type="file" name="image" class="form-control">
+                        <div class="col-md-5">
+                            <label class="form-label fw-bold small">Headline / Title</label>
+                            <input type="text" name="title" class="form-control" placeholder="Enter title..." required>
                         </div>
-                        <div class="col-12">
-                          <label class="form-label">Link</label>
-                          <input type="url" name="link" value="<?= $row['link'] ?>" class="form-control">
+                        <div class="col-md-4">
+                            <label class="form-label fw-bold small">Action Link</label>
+                            <input type="url" name="link" class="form-control" placeholder="https://...">
                         </div>
-                      </div>
-                      <div class="modal-footer">
-                        <button type="submit" class="btn btn-primary">💾 Save Changes</button>
-                      </div>
+                        <div class="col-md-8">
+                            <label class="form-label fw-bold small" id="imageLabel">Image Media</label>
+                            <input type="file" name="image" id="imageInput" class="form-control">
+                        </div>
+                        <div class="col-md-4 d-flex align-items-end">
+                            <button type="submit" class="btn btn-news w-100 fw-bold">Publish Content</button>
+                        </div>
                     </form>
-                  </div>
                 </div>
-              </div>
-              <?php endwhile; ?>
-            </tbody>
-          </table>
-        </div>
-
-        <!-- ================= News Tab ================= -->
-        <div class="tab-pane fade" id="newsTab">
-          <h4 class="fw-semibold">Add News Article</h4>
-          <form method="POST" enctype="multipart/form-data" class="row g-3 mb-4">
-            <input type="hidden" name="action" value="add_news">
-            <div class="col-md-6">
-              <label class="form-label">Title</label>
-              <input type="text" name="title" class="form-control" required>
             </div>
-            <div class="col-md-6">
-              <label class="form-label">Image (Optional)</label>
-              <input type="file" name="image" class="form-control">
-            </div>
-            <div class="col-12">
-              <label class="form-label">Link (Optional)</label>
-              <input type="url" name="link" class="form-control" placeholder="https://example.com">
-            </div>
-            <div class="col-12">
-              <button type="submit" class="btn btn-success">📢 Publish</button>
-            </div>
-          </form>
 
-          <h5 class="fw-semibold">News List</h5>
-          <table class="table table-hover align-middle">
-            <thead class="table-dark">
-              <tr>
-                <th>ID</th><th>Title</th><th>Image</th><th>Link</th><th>Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              <?php while ($row = $news->fetch_assoc()): ?>
-              <tr>
-                <td><?= $row['id'] ?></td>
-                <td><?= htmlspecialchars($row['title']) ?></td>
-                <td><?php if ($row['image']): ?><img src="../<?= $row['image'] ?>" class="img-thumbnail" width="100"><?php endif; ?></td>
-                <td><?= $row['link'] ?: '<span class="text-muted">None</span>' ?></td>
-                <td>
-                  <button class="btn btn-sm btn-warning" 
-                          data-bs-toggle="modal" 
-                          data-bs-target="#editNewsModal<?= $row['id'] ?>">✏️ Edit</button>
-                  <a href="?delete_news=<?= $row['id'] ?>" 
-                     class="btn btn-sm btn-danger" 
-                     onclick="return confirm('Are you sure you want to delete this news?')">🗑️ Delete</a>
-                </td>
-              </tr>
-
-              <!-- Edit News Modal -->
-              <div class="modal fade" id="editNewsModal<?= $row['id'] ?>" tabindex="-1">
-                <div class="modal-dialog modal-lg modal-dialog-centered">
-                  <div class="modal-content">
-                    <form method="POST" enctype="multipart/form-data">
-                      <div class="modal-header">
-                        <h5 class="modal-title">Edit News</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                      </div>
-                      <div class="modal-body row g-3">
-                        <input type="hidden" name="action" value="edit_news">
-                        <input type="hidden" name="id" value="<?= $row['id'] ?>">
-                        <input type="hidden" name="old_image" value="<?= $row['image'] ?>">
-
-                        <div class="col-md-6">
-                          <label class="form-label">Title</label>
-                          <input type="text" name="title" value="<?= htmlspecialchars($row['title']) ?>" class="form-control" required>
-                        </div>
-                        <div class="col-md-6">
-                          <label class="form-label">Replace Image (optional)</label>
-                          <input type="file" name="image" class="form-control">
-                        </div>
-                        <div class="col-12">
-                          <label class="form-label">Link</label>
-                          <input type="url" name="link" value="<?= $row['link'] ?>" class="form-control">
-                        </div>
-                      </div>
-                      <div class="modal-footer">
-                        <button type="submit" class="btn btn-primary">💾 Save Changes</button>
-                      </div>
-                    </form>
-                  </div>
+            <div class="card">
+                <div class="card-body">
+                    <table class="table align-middle datatable w-100">
+                        <thead>
+                            <tr>
+                                <th style="width: 50px;">ID</th>
+                                <th style="width: 100px;">Media</th>
+                                <th style="width: 100px;">Type</th>
+                                <th>Headline</th>
+                                <th style="width: 150px;">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($content as $item): ?>
+                            <tr>
+                                <td class="text-muted"><?= $item['id'] ?></td>
+                                <td>
+                                    <div class="img-thumb-container">
+                                        <?php if($item['image']): ?>
+                                            <img src="../<?= $item['image'] ?>" alt="content">
+                                        <?php else: ?>
+                                            <div class="bg-light d-flex align-items-center justify-content-center h-100"><i class="bi bi-image text-muted"></i></div>
+                                        <?php endif; ?>
+                                    </div>
+                                </td>
+                                <td><span class="badge bg-<?= $item['type'] === 'carousel' ? 'primary-subtle text-primary' : 'success-subtle text-success' ?>"><?= strtoupper($item['type']) ?></span></td>
+                                <td class="fw-semibold text-dark"><?= htmlspecialchars($item['title']) ?></td>
+                                <td>
+                                    <div class="d-flex gap-2">
+                                        <button class="btn btn-light btn-action btn-sm border" title="Edit"><i class="bi bi-pencil-square"></i></button>
+                                        <a href="?delete_<?= $item['type'] ?>=<?= $item['id'] ?>" class="btn btn-danger-subtle text-danger btn-action btn-sm" onclick="return confirm('Delete permanently?')"><i class="bi bi-trash"></i></a>
+                                    </div>
+                                </td>
+                            </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
                 </div>
-              </div>
-              <?php endwhile; ?>
-            </tbody>
-          </table>
+            </div>
         </div>
-        <!-- ================= Users Tab ================= -->
-<div class="tab-pane fade" id="usersTab">
-  <h4 class="fw-semibold">Add User</h4>
-  <form method="POST" class="row g-3 mb-4">
-    <input type="hidden" name="action" value="add_user">
-    <div class="col-md-6">
-      <label class="form-label">Username</label>
-      <input type="text" name="username" class="form-control" required>
-    </div>
-    <div class="col-md-6">
-      <label class="form-label">Password</label>
-      <input type="password" name="password" class="form-control" required>
-    </div>
-      <div class="col-md-4">
-    <label class="form-label">Role</label>
-    <select name="role" class="form-select" required>
-      <option value="admin">Admin</option>
-      <option value="user" selected>User</option>
-    </select>
-  </div>
-    <div class="col-12">
-      <button type="submit" class="btn btn-primary">➕ Add User</button>
-    </div>
-  </form>
 
-  <h5 class="fw-semibold">User List</h5>
- <table class="table table-hover align-middle">
-  <thead class="table-dark">
-    <tr>
-      <th>ID</th>
-      <th>Username</th>
-      <th>Role</th>
-      <th>Action</th>
-    </tr>
-  </thead>
-  <tbody>
-    <?php while ($user = $users->fetch_assoc()): ?>
-    <tr>
-      <td><?= $user['id'] ?></td>
-      <td><?= htmlspecialchars($user['username']) ?></td>
-      <td>
-        <span class="badge bg-<?= $user['role'] === 'admin' ? 'primary' : 'secondary' ?>">
-          <?= ucfirst($user['role']) ?>
-        </span>
-      </td>
-      <td>
-        <button class="btn btn-sm btn-warning"
-                data-bs-toggle="modal"
-                data-bs-target="#editUserModal<?= $user['id'] ?>">✏️ Edit</button>
-        <a href="?delete_user=<?= $user['id'] ?>"
-           class="btn btn-sm btn-danger"
-           onclick="return confirm('Are you sure you want to delete this user?')">🗑️ Delete</a>
-      </td>
-    </tr>
-
-    <!-- Edit User Modal -->
-    <div class="modal fade" id="editUserModal<?= $user['id'] ?>" tabindex="-1">
-      <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-          <form method="POST">
-            <div class="modal-header">
-              <h5 class="modal-title">Edit User</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        <div class="tab-pane fade" id="usersTab">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="fw-bold mb-3">Add Administrator</h5>
+                            <form method="POST">
+                                <input type="hidden" name="action" value="add_user">
+                                <div class="mb-3">
+                                    <label class="form-label small">Username</label>
+                                    <input type="text" name="username" class="form-control" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label small">Password</label>
+                                    <input type="password" name="password" class="form-control" required>
+                                </div>
+                                <div class="mb-4">
+                                    <label class="form-label small">Role</label>
+                                    <select name="role" class="form-select">
+                                        <option value="admin">Admin (Full Access)</option>
+                                        <option value="user">Staff (View Only)</option>
+                                    </select>
+                                </div>
+                                <button type="submit" class="btn btn-news w-100">Create Account</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-8">
+                    <div class="card p-3">
+                        <table class="table datatable w-100">
+                            <thead>
+                                <tr>
+                                    <th>User</th>
+                                    <th>Role</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php while ($user = $users->fetch_assoc()): ?>
+                                <tr>
+                                    <td class="fw-bold"><?= htmlspecialchars($user['username']) ?></td>
+                                    <td><span class="badge <?= $user['role'] === 'admin' ? 'bg-dark' : 'bg-secondary' ?>"><?= $user['role'] ?></span></td>
+                                    <td><a href="?delete_user=<?= $user['id'] ?>" class="text-danger"><i class="bi bi-trash"></i></a></td>
+                                </tr>
+                                <?php endwhile; ?>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
-            <div class="modal-body row g-3">
-              <input type="hidden" name="action" value="edit_user">
-              <input type="hidden" name="id" value="<?= $user['id'] ?>">
-              <div class="col-12">
-                <label class="form-label">Username</label>
-                <input type="text" name="username" value="<?= htmlspecialchars($user['username']) ?>" class="form-control" required>
-              </div>
-              <div class="col-12">
-                <label class="form-label">New Password (leave blank to keep current)</label>
-                <input type="password" name="password" class="form-control">
-              </div>
-              <div class="col-12">
-                <label class="form-label">Role</label>
-                <select name="role" class="form-select">
-                  <option value="admin" <?= $user['role'] === 'admin' ? 'selected' : '' ?>>Admin</option>
-                  <option value="user" <?= $user['role'] === 'user' ? 'selected' : '' ?>>User</option>
-                </select>
-              </div>
-            </div>
-            <div class="modal-footer">
-              <button type="submit" class="btn btn-primary">💾 Save Changes</button>
-            </div>
-          </form>
         </div>
-      </div>
-      </div>
-      <?php endwhile; ?>
-      </tbody>
-      </table>
-      </div>
-      </div>
+
+        <div class="tab-pane fade" id="faqTab">
+            <div class="card p-4">
+                <h5 class="fw-bold mb-4">Manage Knowledge Base (FAQ)</h5>
+                <form method="POST" class="row g-3 mb-5">
+                    <input type="hidden" name="action" value="add_faq">
+                    <div class="col-md-12">
+                        <input type="text" name="question" class="form-control" placeholder="Question..." required>
+                    </div>
+                    <div class="col-md-10">
+                        <textarea name="answer" class="form-control" placeholder="Answer..." rows="2" required></textarea>
+                    </div>
+                    <div class="col-md-2 d-flex align-items-stretch">
+                        <button type="submit" class="btn btn-news w-100">Add</button>
+                    </div>
+                </form>
+                <table class="table datatable w-100">
+                    <thead>
+                        <tr>
+                            <th>Question</th>
+                            <th style="width: 100px;">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php while ($faq = $faqs->fetch_assoc()): ?>
+                        <tr>
+                            <td class="small fw-semibold"><?= htmlspecialchars($faq['question']) ?></td>
+                            <td><a href="?delete_faq=<?= $faq['id'] ?>" class="btn btn-sm btn-outline-danger border-0"><i class="bi bi-trash"></i></a></td>
+                        </tr>
+                        <?php endwhile; ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
-  </div>
 </div>
 
-
+<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
 <script src="../assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+
+<script>
+$(document).ready(function() {
+    // Elegant DataTables config
+    $('.datatable').DataTable({
+        "pageLength": 20,
+        "order": [[0, "desc"]],
+        "language": {
+            "search": "",
+            "searchPlaceholder": "Search records...",
+            "paginate": { "next": "→", "previous": "←" }
+        }
+    });
+
+    // Content input requirements
+    const contentType = $('#contentType');
+    const imageInput = $('#imageInput');
+    const imageLabel = $('#imageLabel');
+
+    function toggleFields() {
+        if (contentType.val() === 'carousel') {
+            imageLabel.html('Image <span class="text-danger">*</span>');
+            imageInput.prop('required', true);
+        } else {
+            imageLabel.text('Image (Optional)');
+            imageInput.prop('required', false);
+        }
+    }
+
+    contentType.on('change', toggleFields);
+    toggleFields();
+});
+</script>
 </body>
 </html>
