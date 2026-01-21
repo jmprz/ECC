@@ -90,6 +90,83 @@ h6 {
   font-family: var(--heading-font);
 }
 
+/* Custom Action Button Styling */
+.btn-action-edit {
+    background-color: #f0f7ff;
+    color: #007bff;
+    transition: all 0.2s ease;
+}
+.btn-action-edit:hover:not(:disabled) {
+    background-color: #007bff;
+    color: #fff;
+    transform: translateY(-2px);
+}
+
+.btn-action-delete {
+    background-color: #fff5f5;
+    color: #dc3545;
+    transition: all 0.2s ease;
+}
+.btn-action-delete:hover {
+    background-color: #dc3545;
+    color: #fff;
+    transform: translateY(-2px);
+}
+
+/* Tooltip/Disabled state */
+.btn:disabled {
+    cursor: not-allowed;
+    opacity: 0.4;
+    filter: grayscale(1);
+    transform: none !important;
+    border: none !important;
+}
+
+/* Icon alignment */
+.btn-sm i {
+    font-size: 0.9rem;
+    vertical-align: middle;
+}
+
+/* FAQ Specific Action Button */
+.btn-action-faq-edit {
+    background-color: #f0f7ff;
+    color: #007bff;
+    transition: all 0.2s ease;
+}
+.btn-action-faq-edit:hover:not(:disabled) {
+  background-color: #007bff;
+    color: #fff;
+    transform: translateY(-2px);
+}
+
+/* Change checkbox background color when checked */
+.form-check-input:checked {
+    background-color: #cc2e28 !important;
+    border-color: #cc2e28 !important;
+}
+
+/* Change the focus/glow ring color */
+.form-check-input:focus {
+    border-color: #cc2e28;
+    box-shadow: 0 0 0 0.25rem rgba(204, 46, 40, 0.25);
+}
+
+/* Change checkbox background to red when checked */
+.custom-checkbox:checked {
+    background-color: #cc2e28 !important;
+    border-color: #cc2e28 !important;
+}
+
+/* Change the glow effect when clicking the checkbox */
+.custom-checkbox:focus {
+    border-color: #cc2e28;
+    box-shadow: 0 0 0 0.25rem rgba(204, 46, 40, 0.25);
+}
+
+.form-check-input {
+    cursor: pointer;
+}
 /* PHP Email Form Messages
 ------------------------------*/
 .php-email-form .error-message {
@@ -1006,6 +1083,36 @@ section,
   font-size: 16px; /* Slightly larger font for better readability */
 }
 
+/* Custom Zoom-In Effect for Carousel Content */
+.carousel-item .row {
+    transition: transform 0.8s ease-in-out, opacity 0.8s ease-in-out;
+    transform: scale(0.9); 
+    opacity: 0;
+}
+
+.carousel-item.active .row {
+    transform: scale(1); 
+    opacity: 1;
+}
+
+
+.carousel-details h2 {
+    transition: all 0.7s ease-out 0.3s; 
+    transform: translateY(20px);
+    opacity: 0;
+}
+
+.carousel-item.active .carousel-details h2 {
+    transform: translateY(0);
+    opacity: 1;
+}
+
+.carousel-item.active .btn-details {
+    transition: all 0.7s ease-out 0.5s;
+    transform: translateY(0);
+    opacity: 1;
+}
+
 .btn-details {
   color: var(--contrast-color);
   font-family: var(--heading-font);
@@ -1041,6 +1148,19 @@ section,
 .btn-news{
   background: var(--accent-color);
   color: var(--contrast-color);
+  font-family: var(--heading-font);
+  font-weight: 500;
+  font-size: 16px;
+  letter-spacing: 1px;
+  padding: 12px 30px;
+  transition: 0.3s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+}
+
+.btn-draft{
   font-family: var(--heading-font);
   font-weight: 500;
   font-size: 16px;

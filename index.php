@@ -36,7 +36,7 @@
 <?php
   require_once "./backend/config/db.php"; 
 
-  $result = $conn->query("SELECT * FROM carousel WHERE status='active' ORDER BY created_at DESC");
+  $result = $conn->query("SELECT * FROM carousel WHERE status='posted' ORDER BY created_at DESC");
 ?>
 
  <main class="main">
@@ -145,6 +145,21 @@
   modalImage.addEventListener('click', function () {
     modalImage.classList.toggle('zoomed');
   });
+
+  // Re-trigger AOS animations when the carousel slides
+const heroCarousel = document.getElementById('hero-carousel');
+
+heroCarousel.addEventListener('slid.bs.carousel', function () {
+    AOS.refresh(); // Refreshes AOS positions
+    // Or manually toggle classes to restart animations
+    const activeItem = this.querySelector('.carousel-item.active [data-aos]');
+    if (activeItem) {
+        activeItem.classList.remove('aos-animate');
+        setTimeout(() => {
+            activeItem.classList.add('aos-animate');
+        }, 10);
+    }
+});
 </script>
 
 

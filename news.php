@@ -1,6 +1,6 @@
 <?php
 require_once "./backend/config/db.php";
-$result = $conn->query("SELECT * FROM news ORDER BY created_at DESC");
+$result = $conn->query("SELECT * FROM news WHERE status='posted' ORDER BY created_at DESC");
 ?>
 <style>
   .card-img-top {

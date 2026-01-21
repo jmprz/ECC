@@ -60,7 +60,7 @@
     <div class="container" style="margin-top: 150px;">
         <?php
         require_once "./backend/config/db.php";
-        $result = $conn->query("SELECT * FROM carousel WHERE status='active' ORDER BY created_at DESC");
+        $result = $conn->query("SELECT * FROM carousel WHERE status='posted' ORDER BY created_at DESC");
         ?>
 
         <div class="container-lg" data-aos="fade-up">

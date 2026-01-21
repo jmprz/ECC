@@ -160,3 +160,14 @@ ALTER TABLE `faq`
 --
 ALTER TABLE `faq`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+
+
+-- Migration to update status fields
+ALTER TABLE carousel MODIFY COLUMN status VARCHAR(20);
+
+UPDATE carousel SET status = 'posted' WHERE status = 'active';
+UPDATE carousel SET status = 'draft' WHERE status = 'inactive';
+
+ALTER TABLE news ADD COLUMN status ENUM('draft', 'posted') DEFAULT 'draft';
+ALTER TABLE faq ADD COLUMN status ENUM('draft', 'posted') DEFAULT 'draft';

@@ -54,10 +54,22 @@
         </div>
       </div>
 
-      <center><p>© 2025 EULOGIO "AMANG" RODRIGUEZ INSTITUTE OF SCIENCE AND TECHNOLOGY</p></center>
+      <center>
+    <p>&copy; <span id="current-year"></span> EULOGIO "AMANG" RODRIGUEZ INSTITUTE OF SCIENCE AND TECHNOLOGY</p>
+</center>
     </div>
   </div>
 </footer>
 
 <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
 <div id="preloader"></div>
+
+<script>
+  // Dynamic Copyright Year
+document.getElementById('current-year').textContent = new Date().getFullYear();
+// NEW: Set the dynamic year
+    const yearSpan = document.getElementById('current-year');
+    if (yearSpan) {
+        yearSpan.textContent = new Date().getFullYear();
+}
+</script>

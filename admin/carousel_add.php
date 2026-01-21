@@ -17,9 +17,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     if (move_uploaded_file($_FILES["image"]["tmp_name"], $targetFilePath)) {
         // Save the correct public path in DB
         $imagePath = "backend/uploads/carousel/" . $fileName;
+        $status = (isset($_POST['action_type']) && $_POST['action_type'] === 'publish') ? 'posted' : 'draft';
 
-        $stmt = $conn->prepare("INSERT INTO carousel (title, image, link) VALUES (?, ?, ?)");
-        $stmt->bind_param("sss", $title, $imagePath, $link);
+        $stmt = $conn->prepare("INSERT INTO carousel (title, image, link, status) VALUES (?, ?, ?, ?)");
+        $stmt->bind_param("sss", $title, $imagePath, $link, $status);
 
         if ($stmt->execute()) {
             echo "✅ Carousel added successfully!";

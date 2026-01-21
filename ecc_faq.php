@@ -3,7 +3,7 @@
 require_once 'backend/config/db.php';
 
 // Fetch FAQs from database
-$result = $conn->query("SELECT * FROM faq ORDER BY id DESC");
+$result = $conn->query("SELECT * FROM faq WHERE status='posted' ORDER BY id DESC");
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -57,7 +57,7 @@ $result = $conn->query("SELECT * FROM faq ORDER BY id DESC");
                       </button>
                     </h2>
                     <div id="collapse-<?= $faq['id']; ?>" class="accordion-collapse collapse <?= $showClass; ?>" data-bs-parent="#faqAccordion">
-                      <div class="accordion-body text-secondary">
+                      <div class="accordion-body text-dark fst-italic">
                         <?= nl2br(htmlspecialchars($faq['answer'])); ?>
                       </div>
                     </div>
