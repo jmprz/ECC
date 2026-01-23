@@ -1,0 +1,8 @@
+# 1. Prevent directory browsing
+Options -Indexes
+
+# 2. Protect sensitive file types
+<FilesMatch "\.(php|env|log|json)$">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
