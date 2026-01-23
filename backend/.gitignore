@@ -6,7 +6,8 @@
 /vendor/
 
 # User-uploaded files
-/uploads/
+/uploads/carousel/
+/uploads/news/
 
 # Temporary files
 /tmp/

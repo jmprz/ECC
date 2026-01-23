@@ -5,30 +5,91 @@ if (!isset($_SESSION['admin_id']) || $_SESSION['role'] !== 'admin') {
     exit;
 }
 
+// Generate CSRF token if not set
+if (empty($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
+
 require_once __DIR__ . '/../backend/config/db.php';
 
-// =============== UPDATE LOGIC =================
+// =============== SECURE FILE UPLOAD FUNCTION =================
+function uploadSecureImage($file, $targetSubDir)
+{
+    $targetDir = "../backend/uploads/" . $targetSubDir . "/";
+    $allowedMimeTypes = ['image/jpeg', 'image/png', 'image/webp'];
+    $maxFileSize = 5 * 1024 * 1024; // 5MB
 
-// 1. UPDATE CONTENT (Carousel/News)
+    if ($file['error'] !== UPLOAD_ERR_OK) {
+        return ['success' => false, 'error' => 'Upload error code: ' . $file['error']];
+    }
+
+    if ($file['size'] > $maxFileSize) {
+        return ['success' => false, 'error' => 'File is too large (Max 5MB).'];
+    }
+
+    $finfo = new finfo(FILEINFO_MIME_TYPE);
+    $mimeType = $finfo->file($file['tmp_name']);
+    if (!in_array($mimeType, $allowedMimeTypes)) {
+        return ['success' => false, 'error' => 'Invalid file type. Only JPG, PNG, and WEBP allowed.'];
+    }
+
+    $extension = pathinfo($file['name'], PATHINFO_EXTENSION);
+    $safeName = bin2hex(random_bytes(16)) . '.' . $extension;
+    $targetFilePath = $targetDir . $safeName;
+
+    if (!is_dir($targetDir)) {
+        mkdir($targetDir, 0755, true);
+    }
+
+    if (move_uploaded_file($file['tmp_name'], $targetFilePath)) {
+        return [
+            'success' => true,
+            'path' => "backend/uploads/" . $targetSubDir . "/" . $safeName
+        ];
+    }
+    return ['success' => false, 'error' => 'Failed to move uploaded file.'];
+}
+
+// =============== CSRF VALIDATION =================
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+        die("CSRF token validation failed. Possible cross-site request detected.");
+    }
+}
+
+if (isset($_GET['delete_carousel']) || isset($_GET['delete_news']) || isset($_GET['delete_user']) || isset($_GET['delete_faq'])) {
+    if (!isset($_GET['csrf_token']) || $_GET['csrf_token'] !== $_SESSION['csrf_token']) {
+        die("CSRF token validation failed for deletion.");
+    }
+}
+
+// =============== 1. UPDATE CONTENT (Carousel/News) =================
 if (isset($_POST['action']) && $_POST['action'] === "update_content") {
     $id = intval($_POST['id']);
     $title = trim($_POST['title']);
     $link = !empty($_POST['link']) ? trim($_POST['link']) : null;
     $status = $_POST['status'];
-    $tableName = $_POST['table_name']; // 'carousel' or 'news'
-    $check = $conn->query("SELECT status FROM $tableName WHERE id=$id")->fetch_assoc();
+    $tableName = ($_POST['table_name'] === 'news') ? 'news' : 'carousel';
+
+    $stmt = $conn->prepare("SELECT status FROM $tableName WHERE id = ?");
+    $stmt->bind_param("i", $id);
+    $stmt->execute();
+    $check = $stmt->get_result()->fetch_assoc();
+
     if ($check['status'] === 'posted') {
         header("Location: admin_dashboard.php?error=already_posted");
         exit;
     }
+
     if (!empty($_FILES["image"]["name"])) {
-        $targetDir = "../backend/uploads/$tableName/";
-        $fileName = time() . "_" . basename($_FILES["image"]["name"]);
-        $targetFilePath = $targetDir . $fileName;
-        if (move_uploaded_file($_FILES["image"]["tmp_name"], $targetFilePath)) {
-            $imagePath = "backend/uploads/$tableName/" . $fileName;
+        $uploadResult = uploadSecureImage($_FILES["image"], $tableName);
+        if ($uploadResult['success']) {
+            $imagePath = $uploadResult['path'];
             $stmt = $conn->prepare("UPDATE $tableName SET title=?, image=?, link=?, status=? WHERE id=?");
             $stmt->bind_param("ssssi", $title, $imagePath, $link, $status, $id);
+        } else {
+            header("Location: admin_dashboard.php?error=" . urlencode($uploadResult['error']));
+            exit;
         }
     } else {
         $stmt = $conn->prepare("UPDATE $tableName SET title=?, link=?, status=? WHERE id=?");
@@ -39,114 +100,78 @@ if (isset($_POST['action']) && $_POST['action'] === "update_content") {
     exit;
 }
 
-// 2. UPDATE FAQ
-if (isset($_POST['action']) && $_POST['action'] === "update_faq") {
-    $id = intval($_POST['id']);
-    $question = trim($_POST['question']);
-    $answer = trim($_POST['answer']);
-    $status = $_POST['status'];
-
-    $check = $conn->query("SELECT status FROM faq WHERE id=$id")->fetch_assoc();
-    if ($check['status'] === 'posted') {
-        header("Location: admin_dashboard.php?error=already_posted");
-        exit;
-    }
-    $stmt = $conn->prepare("UPDATE faq SET question=?, answer=?, status=? WHERE id=?");
-    $stmt->bind_param("sssi", $question, $answer, $status, $id);
-    $stmt->execute();
-    header("Location: admin_dashboard.php?success=faq_updated");
-    exit;
-}
-
-// =============== ORIGINAL ADD/DELETE LOGIC =================
-
+// =============== 2. ADD CONTENT (Carousel/News) =================
 if (isset($_POST['action']) && $_POST['action'] === "add_content") {
     $title = trim($_POST['title']);
     $link = !empty($_POST['link']) ? trim($_POST['link']) : null;
-    $contentType = $_POST['content_type'];
+    $contentType = ($_POST['content_type'] === 'news') ? 'news' : 'carousel';
     $status = $_POST['status'] ?? 'draft';
 
-    $tableName = ($contentType === 'carousel') ? 'carousel' : 'news';
-    $targetDir = "../backend/uploads/$tableName/";
-
-    if (!is_dir($targetDir))
-        mkdir($targetDir, 0777, true);
-
-    $imagePath = null;
-
-    // STRICT IMAGE CHECK
-    if (isset($_FILES["image"]) && !empty($_FILES["image"]["name"])) {
-        $fileName = time() . "_" . basename($_FILES["image"]["name"]);
-        $targetFilePath = $targetDir . $fileName;
-
-        if (move_uploaded_file($_FILES["image"]["tmp_name"], $targetFilePath)) {
-            $imagePath = "backend/uploads/$tableName/" . $fileName;
+    if (!empty($_FILES["image"]["name"])) {
+        $uploadResult = uploadSecureImage($_FILES["image"], $contentType);
+        if ($uploadResult['success']) {
+            $imagePath = $uploadResult['path'];
+            $stmt = $conn->prepare("INSERT INTO $contentType (title, image, link, status) VALUES (?, ?, ?, ?)");
+            $stmt->bind_param("ssss", $title, $imagePath, $link, $status);
+            $stmt->execute();
+            header("Location: admin_dashboard.php?success={$contentType}_added");
+            exit;
         } else {
-            // Error if upload fails
-            header("Location: admin_dashboard.php?error=upload_failed");
+            header("Location: admin_dashboard.php?error=" . urlencode($uploadResult['error']));
             exit;
         }
     } else {
-        // ERROR: No image was uploaded
         header("Location: admin_dashboard.php?error=image_required");
         exit;
     }
-
-    $stmt = $conn->prepare("INSERT INTO $tableName (title, image, link, status) VALUES (?, ?, ?, ?)");
-    $stmt->bind_param("ssss", $title, $imagePath, $link, $status);
-    $stmt->execute();
-
-    header("Location: admin_dashboard.php?success={$contentType}_added");
-    exit;
 }
 
+// =============== 3. DELETE LOGIC (Prepared) =================
 if (isset($_GET['delete_carousel'])) {
-    $id = intval($_GET['delete_carousel']);
-    $conn->query("DELETE FROM carousel WHERE id=$id");
+    $stmt = $conn->prepare("DELETE FROM carousel WHERE id = ?");
+    $stmt->bind_param("i", $_GET['delete_carousel']);
+    $stmt->execute();
     header("Location: admin_dashboard.php?success=deleted");
     exit;
 }
 if (isset($_GET['delete_news'])) {
-    $id = intval($_GET['delete_news']);
-    $conn->query("DELETE FROM news WHERE id=$id");
+    $stmt = $conn->prepare("DELETE FROM news WHERE id = ?");
+    $stmt->bind_param("i", $_GET['delete_news']);
+    $stmt->execute();
     header("Location: admin_dashboard.php?success=deleted");
     exit;
 }
 if (isset($_GET['delete_user'])) {
-    $id = intval($_GET['delete_user']);
-    $conn->query("DELETE FROM admins WHERE id=$id");
+    $stmt = $conn->prepare("DELETE FROM admins WHERE id = ?");
+    $stmt->bind_param("i", $_GET['delete_user']);
+    $stmt->execute();
     header("Location: admin_dashboard.php?success=deleted");
     exit;
 }
 if (isset($_GET['delete_faq'])) {
-    $id = intval($_GET['delete_faq']);
-    $conn->query("DELETE FROM faq WHERE id=$id");
+    $stmt = $conn->prepare("DELETE FROM faq WHERE id = ?");
+    $stmt->bind_param("i", $_GET['delete_faq']);
+    $stmt->execute();
     header("Location: admin_dashboard.php?success=deleted");
     exit;
 }
 
+// =============== 4. USER LOGIC =================
 if (isset($_POST['action']) && $_POST['action'] === "update_user") {
     $id = intval($_POST['user_id']);
-    $username = trim($_POST['username']); // Get new username
-    $new_password = $_POST['new_password'];
+    $username = trim($_POST['username']);
     $role = $_POST['role'];
 
-    if (!empty($new_password)) {
-        // Update username, password, and role
-        $hashed_password = password_hash($new_password, PASSWORD_DEFAULT);
+    if (!empty($_POST['new_password'])) {
+        $hashed_password = password_hash($_POST['new_password'], PASSWORD_DEFAULT);
         $stmt = $conn->prepare("UPDATE admins SET username=?, password=?, role=? WHERE id=?");
         $stmt->bind_param("sssi", $username, $hashed_password, $role, $id);
     } else {
-        // Update username and role only
         $stmt = $conn->prepare("UPDATE admins SET username=?, role=? WHERE id=?");
         $stmt->bind_param("ssi", $username, $role, $id);
     }
-
-    if ($stmt->execute()) {
-        header("Location: admin_dashboard.php?success=user_updated");
-    } else {
-        header("Location: admin_dashboard.php?error=update_failed");
-    }
+    $stmt->execute();
+    header("Location: admin_dashboard.php?success=user_updated");
     exit;
 }
 
@@ -161,11 +186,33 @@ if (isset($_POST['action']) && $_POST['action'] === "add_user") {
     exit;
 }
 
+// =============== 5. FAQ LOGIC =================
+if (isset($_POST['action']) && $_POST['action'] === "update_faq") {
+    $id = intval($_POST['id']);
+    $question = trim($_POST['question']);
+    $answer = trim($_POST['answer']);
+    $status = $_POST['status'];
+
+    $stmt = $conn->prepare("SELECT status FROM faq WHERE id=?");
+    $stmt->bind_param("i", $id);
+    $stmt->execute();
+    $check = $stmt->get_result()->fetch_assoc();
+
+    if ($check['status'] === 'posted') {
+        header("Location: admin_dashboard.php?error=already_posted");
+        exit;
+    }
+    $stmt = $conn->prepare("UPDATE faq SET question=?, answer=?, status=? WHERE id=?");
+    $stmt->bind_param("sssi", $question, $answer, $status, $id);
+    $stmt->execute();
+    header("Location: admin_dashboard.php?success=faq_updated");
+    exit;
+}
+
 if (isset($_POST['action']) && $_POST['action'] === "add_faq") {
     $question = trim($_POST['question']);
     $answer = trim($_POST['answer']);
     $status = $_POST['status'] ?? 'draft';
-
     $stmt = $conn->prepare("INSERT INTO faq (question, answer, status) VALUES (?, ?, ?)");
     $stmt->bind_param("sss", $question, $answer, $status);
     $stmt->execute();
@@ -201,6 +248,12 @@ $faqs = $conn->query("SELECT * FROM faq ORDER BY id DESC");
     <link href="../assets/css/main.css?v=<?php echo time(); ?>" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <!-- Favicons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="../assets/img/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../assets/img/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../assets/img/favicon/favicon-16x16.png">
+    <link rel="manifest" href="../assets/img/favicon/site.webmanifest">
 
     <style>
         :root {
@@ -319,6 +372,8 @@ $faqs = $conn->query("SELECT * FROM faq ORDER BY id DESC");
                         <h5 class="fw-bold mb-4">Create New Content</h5>
                         <form method="POST" enctype="multipart/form-data" class="row g-3">
                             <input type="hidden" name="action" value="add_content">
+                            <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
+
                             <div class="col-md-3">
                                 <label class="form-label fw-bold small">Category</label>
                                 <select name="content_type" id="contentType" class="form-select">
@@ -342,7 +397,7 @@ $faqs = $conn->query("SELECT * FROM faq ORDER BY id DESC");
                                     accept="image/*">
                                 <div class="form-text">An image is required for both events and news.</div>
                             </div>
-                            <div class="col-md-4 d-flex align-items-end gap-2">
+                            <div class="col-md-4 d-flex align-items-end gap-2 mb-4">
                                 <button type="submit" name="status" value="draft" class="btn btn-news w-100 fw-bold"><i
                                         class="bi bi-floppy2-fill me-1"></i> Save</button>
                             </div>
@@ -397,7 +452,7 @@ $faqs = $conn->query("SELECT * FROM faq ORDER BY id DESC");
                                                     <i class="bi bi-pencil-fill"></i>
                                                 </button>
 
-                                                <a href="?delete_<?= $item['type'] ?>=<?= $item['id'] ?>"
+                                                <a href="?delete_<?= $item['type'] ?>=<?= $item['id'] ?>&csrf_token=<?= $_SESSION['csrf_token'] ?>"
                                                     class="btn btn-sm btn-action-delete" title="Delete Permanently"
                                                     onclick="return confirm('Are you sure you want to delete this?')">
                                                     <i class="bi bi-trash3-fill"></i>
@@ -412,6 +467,7 @@ $faqs = $conn->query("SELECT * FROM faq ORDER BY id DESC");
                 </div>
             </div>
 
+
             <div class="tab-pane fade" id="usersTab">
                 <div class="row">
                     <div class="col-md-4">
@@ -420,6 +476,9 @@ $faqs = $conn->query("SELECT * FROM faq ORDER BY id DESC");
                                 <h5 class="fw-bold mb-3">Add Administrator</h5>
                                 <form method="POST">
                                     <input type="hidden" name="action" value="add_user">
+                                    <input type="hidden" name="csrf_token"
+                                        value="<?php echo $_SESSION['csrf_token']; ?>">
+
                                     <div class="mb-3">
                                         <label class="form-label small">Username</label>
                                         <input type="text" name="username" class="form-control" required>
@@ -466,7 +525,7 @@ $faqs = $conn->query("SELECT * FROM faq ORDER BY id DESC");
                                                         <i class="bi bi-shield-lock-fill"></i>
                                                     </button>
 
-                                                    <a href="?delete_user=<?= $user['id'] ?>"
+                                                    <a href="?delete_user=<?= $user['id'] ?>&csrf_token=<?= $_SESSION['csrf_token'] ?>"
                                                         class="btn btn-sm btn-action-delete"
                                                         onclick="return confirm('Remove administrator?')">
                                                         <i class="bi bi-person-x-fill"></i>
@@ -487,6 +546,8 @@ $faqs = $conn->query("SELECT * FROM faq ORDER BY id DESC");
                     <h5 class="fw-bold mb-4">Manage FAQ</h5>
                     <form method="POST" class="row g-3 mb-5">
                         <input type="hidden" name="action" value="add_faq">
+                        <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
+
                         <div class="col-md-12">
                             <input type="text" name="question" class="form-control" placeholder="Question..." required>
                         </div>
@@ -521,7 +582,7 @@ $faqs = $conn->query("SELECT * FROM faq ORDER BY id DESC");
 
                                     <td>
                                         <span
-                                            class="badge bg-<?= ($faq['status'] ?? 'posted') === 'posted' ? 'success' : 'secondary' ?> text-white<?= ($faq['status'] ?? 'posted') === 'posted' ? 'success' : 'secondary' ?>">
+                                            class="badge bg-<?= ($faq['status'] ?? 'posted') === 'posted' ? 'success' : 'secondary' ?> text-white">
                                             <?= ucfirst($faq['status'] ?? 'posted') ?>
                                         </span>
                                     </td>
@@ -537,8 +598,9 @@ $faqs = $conn->query("SELECT * FROM faq ORDER BY id DESC");
                                                 <i class="bi bi-pencil-fill"></i>
                                             </button>
 
-                                            <a href="?delete_faq=<?= $faq['id'] ?>" class="btn btn-sm btn-action-delete"
-                                                title="Delete FAQ" onclick="return confirm('Remove this FAQ permanently?')">
+                                            <a href="?delete_faq=<?= $faq['id'] ?>&csrf_token=<?= $_SESSION['csrf_token'] ?>"
+                                                class="btn btn-sm btn-action-delete" title="Delete FAQ"
+                                                onclick="return confirm('Remove this FAQ permanently?')">
                                                 <i class="bi bi-trash3-fill"></i>
                                             </a>
                                         </div>
@@ -563,6 +625,7 @@ $faqs = $conn->query("SELECT * FROM faq ORDER BY id DESC");
                     <input type="hidden" name="action" value="update_content">
                     <input type="hidden" name="id" id="edit-id">
                     <input type="hidden" name="table_name" id="edit-table-name">
+                    <input type="hidden" name="csrf_token" value="<?= $_SESSION['csrf_token']; ?>">
 
                     <div class="col-12">
                         <label class="form-label small fw-bold">Headline / Title</label>
@@ -605,6 +668,8 @@ $faqs = $conn->query("SELECT * FROM faq ORDER BY id DESC");
                 <div class="modal-body row g-3">
                     <input type="hidden" name="action" value="update_faq">
                     <input type="hidden" name="id" id="edit-faq-id">
+                    <input type="hidden" name="csrf_token" value="<?= $_SESSION['csrf_token']; ?>">
+
                     <div class="col-12">
                         <label class="form-label small fw-bold">Question</label>
                         <input type="text" name="question" id="edit-faq-question" class="form-control" required>
@@ -643,6 +708,7 @@ $faqs = $conn->query("SELECT * FROM faq ORDER BY id DESC");
                     <div class="modal-body">
                         <input type="hidden" name="action" value="update_user">
                         <input type="hidden" name="user_id" id="edit_user_id">
+                        <input type="hidden" name="csrf_token" value="<?= $_SESSION['csrf_token']; ?>">
 
                         <div class="mb-3">
                             <label class="form-label small fw-bold">Username</label>
@@ -664,9 +730,21 @@ $faqs = $conn->query("SELECT * FROM faq ORDER BY id DESC");
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                        <button type="submit" class="btn btn-primary"
+                            style="background-color: #cc2e28; border: none;">Save Changes</button>
                     </div>
                 </form>
+            </div>
+        </div>
+    </div>
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+        <div id="liveToast" class="toast align-items-center text-white border-0" role="alert" aria-live="assertive"
+            aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body" id="toastMessage">
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
+                    aria-label="Close"></button>
             </div>
         </div>
     </div>
@@ -749,6 +827,56 @@ $faqs = $conn->query("SELECT * FROM faq ORDER BY id DESC");
             var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
                 return new bootstrap.Tooltip(tooltipTriggerEl)
             });
+        });
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const urlParams = new URLSearchParams(window.location.search);
+            const toastEl = document.getElementById('liveToast');
+            const toastMessage = document.getElementById('toastMessage');
+            const toast = new bootstrap.Toast(toastEl);
+
+            let message = "";
+            let bgColor = "";
+
+            // Check for Success Messages
+            if (urlParams.has('success')) {
+                const type = urlParams.get('success');
+                bgColor = "bg-success";
+
+                const messages = {
+                    'updated': 'Content updated successfully!',
+                    'deleted': 'Item removed permanently.',
+                    'user_added': 'New administrator created.',
+                    'faq_added': 'FAQ added to the database.',
+                    'carousel_added': 'Carousel event added.',
+                    'news_added': 'News article published.'
+                };
+                message = messages[type] || "Action completed successfully!";
+            }
+
+            // Check for Error Messages
+            if (urlParams.has('error')) {
+                const errType = urlParams.get('error');
+                bgColor = "bg-danger";
+
+                const errors = {
+                    'image_required': 'Error: You must upload an image.',
+                    'upload_failed': 'Error: File upload failed.',
+                    'already_posted': 'Action Locked: Posted items cannot be edited.',
+                    'invalid_file_type': 'Error: Only JPG, PNG, and WEBP allowed.'
+                };
+                message = errors[errType] || decodeURIComponent(errType);
+            }
+
+            // If we have a message, show the toast
+            if (message) {
+                toastEl.classList.add(bgColor);
+                toastMessage.textContent = message;
+                toast.show();
+
+                // Optional: Clean the URL after showing the toast so it doesn't pop up again on refresh
+                window.history.replaceState({}, document.title, window.location.pathname);
+            }
         });
     </script>
 </body>

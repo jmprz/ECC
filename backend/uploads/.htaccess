@@ -1,0 +1,10 @@
+# Disable script execution in the uploads directory
+Options -ExecCGI
+php_flag engine off
+SetHandler default-handler
+<Files *>
+    ForceType application/octet-stream
+</Files>
+<FilesMatch "(?i)\.(jpg|jpeg|png|webp|gif)$">
+    ForceType image/jpeg
+</FilesMatch>
